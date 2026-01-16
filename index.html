@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability Quest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6B6B;
+            --success: #4ECDC4;
+            --warning: #FFE66D;
+            --dark: #1a1a2e;
+            --light: #F8F9FA;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: var(--light);
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #FFE66D, #FF6B6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        .xp-bar-container {
+            width: 100px;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .xp-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #FFE66D, #FF6B6B);
+            border-radius: 10px;
+            transition: width 0.5s;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+        }
+
+        /* Home Page */
+        .welcome {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .menu-card {
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        .menu-card.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .menu-card.locked:hover {
+            transform: none;
+            border-color: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .menu-card .lock-badge {
+            display: none;
+            font-size: 0.75rem;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 10px;
+            margin-top: 8px;
+        }
+
+        .menu-card.locked .lock-badge {
+            display: inline-block;
+        }
+
+        .menu-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+
+        .menu-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .menu-subtitle {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Back Button */
+        .back-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Level Select */
+        .level-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .level-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .level-btn {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #6C63FF, #5a52d5);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .level-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.5);
+        }
+
+        .level-btn.completed {
+            background: linear-gradient(135deg, #4ECDC4, #3db8b0);
+        }
+
+        .level-btn.locked {
+            background: rgba(255,255,255,0.1);
+            cursor: not-allowed;
+        }
+
+        .level-btn.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .level-btn span {
+            font-size: 0.8rem;
+            font-weight: normal;
+        }
+
+        /* Lesson Content */
+        .lesson-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .lesson-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--warning);
+        }
+
+        .concept-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .concept-emoji {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .concept-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .concept-text strong {
+            color: var(--warning);
+        }
+
+        .formula-display {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.3), rgba(255, 107, 107, 0.3));
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin: 25px 0;
+            border: 2px solid var(--primary);
+        }
+
+        .formula-display h3 {
+            margin-bottom: 15px;
+            color: var(--warning);
+        }
+
+        .formula-big {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: rgba(0,0,0,0.3);
+            padding: 20px 30px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        .visual-example {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .visual-item {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .item-red { background: linear-gradient(145deg, #ff6b6b, #cc5555); }
+        .item-blue { background: linear-gradient(145deg, #6c63ff, #5550cc); }
+        .item-green { background: linear-gradient(145deg, #4ecdc4, #3eb8b0); }
+
+        .highlight-box {
+            background: rgba(78, 205, 196, 0.2);
+            border-left: 4px solid var(--success);
+            padding: 15px 20px;
+            border-radius: 0 15px 15px 0;
+            margin: 20px 0;
+        }
+
+        .steps-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .step-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-label {
+            color: var(--warning);
+            font-weight: 600;
+            min-width: 80px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-arrow {
+            color: var(--success);
+            font-size: 1.5rem;
+        }
+
+        .answer-box {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.2), rgba(108, 99, 255, 0.2));
+            border: 2px solid var(--success);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .answer-box .final {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--warning);
+        }
+
+        .next-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 30px auto 0;
+            padding: 18px;
+            background: linear-gradient(135deg, #4ECDC4, #3db8b0);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.5);
+        }
+
+        /* Interactive Demo */
+        .demo-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .demo-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--success);
+        }
+
+        .coin {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ffd700, #ffaa00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 20px;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .coin:hover { transform: scale(1.05); }
+
+        .coin.flipping { animation: flip 0.8s ease-in-out; }
+
+        @keyframes flip {
+            0% { transform: rotateY(0); }
+            100% { transform: rotateY(1440deg); }
+        }
+
+        .dice {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            color: #333;
+        }
+
+        .dice:hover { transform: scale(1.05) rotate(5deg); }
+
+        .dice.rolling { animation: roll 0.4s ease-in-out; }
+
+        @keyframes roll {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(20deg) scale(1.1); }
+            75% { transform: rotate(-20deg) scale(1.1); }
+        }
+
+        .result-display {
+            font-size: 1.5rem;
+            margin: 15px 0;
+        }
+
+        .result-display strong {
+            color: var(--warning);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat-box { text-align: center; }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--warning);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .demo-btn {
+            background: linear-gradient(135deg, #6C63FF, #5a52d5);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+
+        .demo-btn:hover { transform: translateY(-2px); }
+
+        /* Quiz */
+        .quiz-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .quiz-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .quiz-dot.active { background: var(--warning); }
+        .quiz-dot.correct { background: var(--success); }
+        .quiz-dot.wrong { background: var(--secondary); }
+
+        .quiz-question {
+            font-size: 1.3rem;
+            text-align: center;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .quiz-visual {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 18px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.2);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(78, 205, 196, 0.3);
+        }
+
+        .quiz-option.wrong {
+            border-color: var(--secondary);
+            background: rgba(255, 107, 107, 0.3);
+        }
+
+        .quiz-option:disabled { cursor: not-allowed; }
+
+        .hint-btn {
+            display: block;
+            margin: 20px auto 0;
+            background: none;
+            border: 2px solid var(--warning);
+            color: var(--warning);
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hint-btn:hover { background: rgba(255, 230, 109, 0.2); }
+
+        .hint-text {
+            display: none;
+            background: rgba(255, 230, 109, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .hint-text.show { display: block; }
+
+        .quiz-feedback {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+            animation: bounceIn 0.4s ease;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(78, 205, 196, 0.2);
+            color: var(--success);
+        }
+
+        .quiz-feedback.wrong {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--secondary);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Playground */
+        .playground-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .play-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .play-card h3 {
+            margin-bottom: 20px;
+            color: var(--warning);
+        }
+
+        /* Spinner */
+        .spinner-wrap {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 15px;
+        }
+
+        .spinner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                #FF6B6B 0deg 90deg,
+                #4ECDC4 90deg 180deg,
+                #FFE66D 180deg 270deg,
+                #6C63FF 270deg 360deg
+            );
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .spinner::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 25px;
+            height: 25px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .spinner-arrow {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 20px solid white;
+            z-index: 10;
+        }
+
+        .spinner.spinning {
+            animation: spin 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(var(--spin-deg)); }
+        }
+
+        /* Drag & Drop */
+        .drag-area {
+            min-height: 80px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .drag-item {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #6C63FF, #5a52d5);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: grab;
+            transition: all 0.2s;
+        }
+
+        .drag-item:hover { transform: scale(1.1); }
+        .drag-item.dragging { opacity: 0.5; }
+
+        .drop-zones {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .drop-zone {
+            min-height: 100px;
+            background: rgba(255,255,255,0.05);
+            border: 2px dashed rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-content: flex-start;
+            transition: all 0.3s;
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--success);
+            background: rgba(78, 205, 196, 0.1);
+        }
+
+        .zone-label {
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--warning);
+            margin-bottom: 5px;
+        }
+
+        /* Achievements */
+        .achievements-wrap {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .achievements-wrap h2 { margin-bottom: 25px; }
+
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            padding: 15px 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .badge.unlocked {
+            background: rgba(255, 230, 109, 0.15);
+            border: 2px solid var(--warning);
+        }
+
+        .badge.locked {
+            opacity: 0.4;
+            filter: grayscale(1);
+        }
+
+        .badge-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .badge-name {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Popup */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .popup-overlay.show { display: flex; }
+
+        .popup-content {
+            text-align: center;
+            animation: bounceIn 0.5s ease;
+        }
+
+        .popup-icon { font-size: 5rem; margin-bottom: 15px; }
+
+        .popup-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FFE66D, #FF6B6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .popup-btn {
+            background: linear-gradient(135deg, #6C63FF, #5a52d5);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            animation: confetti-fall 3s linear forwards;
+            z-index: 9999;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            .menu-grid { grid-template-columns: 1fr; }
+            .levels-grid { grid-template-columns: repeat(3, 1fr); }
+            .playground-grid { grid-template-columns: 1fr; }
+            .badge-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats { gap: 10px; }
+            .stat { padding: 6px 12px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="logo">
+            <span>🎲 Probability Quest</span>
+        </div>
+        <div class="stats">
+            <div class="stat">
+                ⭐ <span id="xp-num">0</span>
+                <div class="xp-bar-container">
+                    <div class="xp-bar" id="xp-bar" style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="stat">
+                🏆 Lvl <span id="level-num">1</span>
+            </div>
+            <div class="stat">
+                🔥 <span id="streak-num">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOME SCREEN -->
+    <div class="screen active" id="home-screen">
+        <div class="welcome">
+            <h1>🎯 Start Your Journey</h1>
+            <p>Complete lessons to unlock everything!</p>
+        </div>
+
+        <div class="menu-grid">
+            <div class="menu-card" id="menu-learn" onclick="menuClick('learn-select')">
+                <div class="menu-icon">📚</div>
+                <div class="menu-title">Learn</div>
+                <div class="menu-subtitle">Start here!</div>
+            </div>
+
+            <div class="menu-card locked" id="menu-quiz" onclick="menuClick('quiz-select')">
+                <div class="menu-icon">🧠</div>
+                <div class="menu-title">Quiz</div>
+                <div class="menu-subtitle">Test your skills</div>
+                <div class="lock-badge">🔒 Complete Lesson 1</div>
+            </div>
+
+            <div class="menu-card locked" id="menu-playground" onclick="menuClick('playground')">
+                <div class="menu-icon">🎮</div>
+                <div class="menu-title">Playground</div>
+                <div class="menu-subtitle">Experiment freely</div>
+                <div class="lock-badge">🔒 Complete Lesson 2</div>
+            </div>
+
+            <div class="menu-card locked" id="menu-trophies" onclick="menuClick('achievements')">
+                <div class="menu-icon">🏆</div>
+                <div class="menu-title">Trophies</div>
+                <div class="menu-subtitle">View your badges</div>
+                <div class="lock-badge">🔒 Complete Lesson 1</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEARN SELECT -->
+    <div class="screen" id="learn-select">
+        <button class="back-btn" onclick="goTo('home-screen')">← Back</button>
+
+        <div class="level-header">
+            <h2>📚 Learn Probability</h2>
+            <p>Complete each level to unlock the next!</p>
+        </div>
+
+        <div class="levels-grid">
+            <button class="level-btn" onclick="startLesson(1)">1<span>Basics</span></button>
+            <button class="level-btn locked" id="learn-2" onclick="startLesson(2)">2<span>Formula</span></button>
+            <button class="level-btn locked" id="learn-3" onclick="startLesson(3)">3<span>Dice</span></button>
+            <button class="level-btn locked" id="learn-4" onclick="startLesson(4)">4<span>Cards</span></button>
+            <button class="level-btn locked" id="learn-5" onclick="startLesson(5)">5<span>Complement</span></button>
+            <button class="level-btn locked" id="learn-6" onclick="startLesson(6)">6<span>Two Events</span></button>
+        </div>
+    </div>
+
+    <!-- LESSON SCREEN -->
+    <div class="screen" id="lesson-screen">
+        <button class="back-btn" onclick="goTo('learn-select')">← Back</button>
+        <div class="lesson-content" id="lesson-content"></div>
+    </div>
+
+    <!-- QUIZ SELECT -->
+    <div class="screen" id="quiz-select">
+        <button class="back-btn" onclick="goTo('home-screen')">← Back</button>
+
+        <div class="level-header">
+            <h2>🧠 Quiz Time</h2>
+            <p>Earn XP by answering correctly!</p>
+        </div>
+
+        <div class="levels-grid">
+            <button class="level-btn" onclick="startQuiz(1)">1<span>Easy</span></button>
+            <button class="level-btn" onclick="startQuiz(2)">2<span>Easy</span></button>
+            <button class="level-btn locked" id="quiz-3" onclick="startQuiz(3)">3<span>Medium</span></button>
+            <button class="level-btn locked" id="quiz-4" onclick="startQuiz(4)">4<span>Medium</span></button>
+            <button class="level-btn locked" id="quiz-5" onclick="startQuiz(5)">5<span>Hard</span></button>
+            <button class="level-btn locked" id="quiz-6" onclick="startQuiz(6)">6<span>Hard</span></button>
+        </div>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div class="screen" id="quiz-screen">
+        <button class="back-btn" onclick="goTo('quiz-select')">← Back</button>
+        <div id="quiz-content"></div>
+    </div>
+
+    <!-- PLAYGROUND -->
+    <div class="screen" id="playground">
+        <button class="back-btn" onclick="goTo('home-screen')">← Back</button>
+
+        <div class="level-header">
+            <h2>🎮 Playground</h2>
+            <p>Experiment and have fun!</p>
+        </div>
+
+        <div class="playground-grid">
+            <div class="play-card">
+                <h3>🪙 Coin Flip</h3>
+                <div class="coin" id="play-coin" onclick="playCoinFlip()">🪙</div>
+                <div class="result-display">Result: <strong id="coin-result">-</strong></div>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-value" id="coin-heads">0</div>
+                        <div class="stat-label">Heads</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="coin-tails">0</div>
+                        <div class="stat-label">Tails</div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button class="demo-btn" onclick="resetCoin()">Reset</button>
+                    <button class="demo-btn" onclick="multiCoin(10)">×10</button>
+                </div>
+            </div>
+
+            <div class="play-card">
+                <h3>🎲 Dice Roll</h3>
+                <div class="dice" id="play-dice" onclick="playDiceRoll()">⚀</div>
+                <div class="result-display">Rolled: <strong id="dice-result">-</strong></div>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-value" id="dice-total">0</div>
+                        <div class="stat-label">Total Rolls</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="dice-six">0</div>
+                        <div class="stat-label">Sixes</div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button class="demo-btn" onclick="resetDice()">Reset</button>
+                    <button class="demo-btn" onclick="multiDice(10)">×10</button>
+                </div>
+            </div>
+
+            <div class="play-card">
+                <h3>🎡 Spinner</h3>
+                <div class="spinner-wrap">
+                    <div class="spinner-arrow"></div>
+                    <div class="spinner" id="play-spinner" onclick="playSpinner()"></div>
+                </div>
+                <div class="result-display">Landed: <strong id="spinner-result">-</strong></div>
+                <button class="demo-btn" onclick="resetSpinner()">Reset</button>
+            </div>
+
+            <div class="play-card">
+                <h3>🎯 Sort: Even vs Odd</h3>
+                <div class="drag-area" id="drag-source">
+                    <div class="drag-item" draggable="true" data-val="1">⚀</div>
+                    <div class="drag-item" draggable="true" data-val="2">⚁</div>
+                    <div class="drag-item" draggable="true" data-val="3">⚂</div>
+                    <div class="drag-item" draggable="true" data-val="4">⚃</div>
+                    <div class="drag-item" draggable="true" data-val="5">⚄</div>
+                    <div class="drag-item" draggable="true" data-val="6">⚅</div>
+                </div>
+                <div class="drop-zones">
+                    <div class="drop-zone" id="zone-even">
+                        <div class="zone-label">EVEN</div>
+                    </div>
+                    <div class="drop-zone" id="zone-odd">
+                        <div class="zone-label">ODD</div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button class="demo-btn" onclick="checkSort()">Check</button>
+                    <button class="demo-btn" onclick="resetSort()">Reset</button>
+                </div>
+                <div id="sort-feedback" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACHIEVEMENTS -->
+    <div class="screen" id="achievements">
+        <button class="back-btn" onclick="goTo('home-screen')">← Back</button>
+
+        <div class="achievements-wrap">
+            <h2>🏆 Your Trophies</h2>
+
+            <div class="badge-grid">
+                <div class="badge locked" id="badge-first-flip">
+                    <div class="badge-icon">🪙</div>
+                    <div class="badge-name">First Flip</div>
+                </div>
+                <div class="badge locked" id="badge-dice-10">
+                    <div class="badge-icon">🎲</div>
+                    <div class="badge-name">Dice Master</div>
+                </div>
+                <div class="badge locked" id="badge-quiz-1">
+                    <div class="badge-icon">✅</div>
+                    <div class="badge-name">Quiz Ace</div>
+                </div>
+                <div class="badge locked" id="badge-streak-3">
+                    <div class="badge-icon">🔥</div>
+                    <div class="badge-name">On Fire</div>
+                </div>
+                <div class="badge locked" id="badge-learn-all">
+                    <div class="badge-icon">📚</div>
+                    <div class="badge-name">Scholar</div>
+                </div>
+                <div class="badge locked" id="badge-spinner">
+                    <div class="badge-icon">🎡</div>
+                    <div class="badge-name">Spin Pro</div>
+                </div>
+                <div class="badge locked" id="badge-sort">
+                    <div class="badge-icon">🎯</div>
+                    <div class="badge-name">Sorter</div>
+                </div>
+                <div class="badge locked" id="badge-level-5">
+                    <div class="badge-icon">👑</div>
+                    <div class="badge-name">Champion</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="play-card" style="max-width: 400px; margin: 0 auto;">
+            <h3>📊 Your Stats</h3>
+            <div class="stats-row" style="margin-top: 20px;">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-quizzes">0</div>
+                    <div class="stat-label">Quizzes</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-lessons">0</div>
+                    <div class="stat-label">Lessons</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-badges">0/8</div>
+                    <div class="stat-label">Badges</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEVEL UP POPUP -->
+    <div class="popup-overlay" id="popup">
+        <div class="popup-content">
+            <div class="popup-icon">🎉</div>
+            <div class="popup-title">LEVEL UP!</div>
+            <p>You reached Level <span id="popup-level">2</span>!</p>
+            <button class="popup-btn" onclick="closePopup()">Awesome!</button>
+        </div>
+    </div>
+
+    <script>
+        // GAME STATE
+        const game = {
+            xp: 0,
+            level: 1,
+            streak: 0,
+            lessonsComplete: new Set(),
+            quizzesComplete: new Set(),
+            badges: new Set(),
+            coins: { heads: 0, tails: 0 },
+            dice: { total: 0, sixes: 0 },
+            spins: 0
+        };
+
+        const XP_PER_LEVEL = 150;
+
+        // NAVIGATION
+        function goTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function menuClick(screenId) {
+            // Check if the menu card is locked
+            const menuMap = {
+                'learn-select': 'menu-learn',
+                'quiz-select': 'menu-quiz',
+                'playground': 'menu-playground',
+                'achievements': 'menu-trophies'
+            };
+            const menuCard = document.getElementById(menuMap[screenId]);
+            if (menuCard && menuCard.classList.contains('locked')) {
+                // Shake the card to indicate it's locked
+                menuCard.style.animation = 'shake 0.5s';
+                setTimeout(() => menuCard.style.animation = '', 500);
+                return;
+            }
+            goTo(screenId);
+        }
+
+        // XP & LEVEL
+        function addXP(amount) {
+            game.xp += amount;
+            const newLevel = Math.floor(game.xp / XP_PER_LEVEL) + 1;
+            if (newLevel > game.level) {
+                game.level = newLevel;
+                showPopup();
+                if (game.level >= 5) unlock('badge-level-5');
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('xp-num').textContent = game.xp;
+            document.getElementById('level-num').textContent = game.level;
+            document.getElementById('streak-num').textContent = game.streak;
+            document.getElementById('xp-bar').style.width = ((game.xp % XP_PER_LEVEL) / XP_PER_LEVEL * 100) + '%';
+
+            document.getElementById('stat-quizzes').textContent = game.quizzesComplete.size;
+            document.getElementById('stat-lessons').textContent = game.lessonsComplete.size;
+            document.getElementById('stat-badges').textContent = game.badges.size + '/8';
+
+            // Unlock learn levels
+            for (let i = 2; i <= 6; i++) {
+                if (game.lessonsComplete.has(i - 1)) {
+                    const btn = document.getElementById('learn-' + i);
+                    if (btn) btn.classList.remove('locked');
+                }
+            }
+            // Unlock quiz levels
+            for (let i = 3; i <= 6; i++) {
+                if (game.quizzesComplete.size >= i - 2) {
+                    const btn = document.getElementById('quiz-' + i);
+                    if (btn) btn.classList.remove('locked');
+                }
+            }
+
+            // Unlock menu items based on lessons completed
+            if (game.lessonsComplete.has(1)) {
+                document.getElementById('menu-quiz').classList.remove('locked');
+                document.getElementById('menu-trophies').classList.remove('locked');
+            }
+            if (game.lessonsComplete.has(2)) {
+                document.getElementById('menu-playground').classList.remove('locked');
+            }
+        }
+
+        function showPopup() {
+            document.getElementById('popup-level').textContent = game.level;
+            document.getElementById('popup').classList.add('show');
+            confetti();
+        }
+
+        function closePopup() {
+            document.getElementById('popup').classList.remove('show');
+        }
+
+        function unlock(badgeId) {
+            if (!game.badges.has(badgeId)) {
+                game.badges.add(badgeId);
+                const el = document.getElementById(badgeId);
+                if (el) {
+                    el.classList.remove('locked');
+                    el.classList.add('unlocked');
+                }
+                updateUI();
+            }
+        }
+
+        function confetti() {
+            const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#6C63FF'];
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const c = document.createElement('div');
+                    c.className = 'confetti';
+                    c.style.left = Math.random() * 100 + 'vw';
+                    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    document.body.appendChild(c);
+                    setTimeout(() => c.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        // LESSONS
+        const lessons = {
+            1: {
+                title: "What is Probability?",
+                content: `
+                    <div class="concept-card">
+                        <div class="concept-emoji">🎯</div>
+                        <div class="concept-text">
+                            <strong>Probability</strong> = How likely something will happen
+                        </div>
+                    </div>
+                    <div class="concept-card">
+                        <div class="concept-emoji">📊</div>
+                        <div class="concept-text">
+                            It's a number from <strong>0</strong> (impossible) to <strong>1</strong> (certain)
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-emoji">🪙</div>
+                        <div class="concept-text"><strong>Example: Flipping a Coin</strong></div>
+                        <div class="steps-box">
+                            <div class="step-row">
+                                <div class="step-num">1</div>
+                                <div class="step-label">Analyze</div>
+                                <div class="step-content">Want: Heads → <strong>1 outcome</strong><br>Total possible: Heads or Tails → <strong>2 outcomes</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">2</div>
+                                <div class="step-label">Fraction</div>
+                                <div class="step-content">1 ÷ 2 = <strong>1/2</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">3</div>
+                                <div class="step-label">Percent</div>
+                                <div class="step-content">1/2 = 0.5 = <strong>50%</strong></div>
+                            </div>
+                            <div class="answer-box">
+                                <div class="final">P(Heads) = 1/2 = 50%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="demo-box">
+                        <div class="demo-title">Try it! Click the coin:</div>
+                        <div class="coin" onclick="lessonCoinFlip()">🪙</div>
+                        <div class="result-display" id="lesson-coin-result">Click to flip!</div>
+                    </div>
+                `
+            },
+            2: {
+                title: "The Magic Formula",
+                content: `
+                    <div class="formula-display">
+                        <h3>⚡ THE FORMULA</h3>
+                        <div class="formula-big">
+                            Probability = What you want ÷ Total possible
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-emoji">🎱</div>
+                        <div class="concept-text"><strong>Example: Picking a Red Marble</strong></div>
+                        <div class="visual-example">
+                            <div class="visual-item item-red"></div>
+                            <div class="visual-item item-red"></div>
+                            <div class="visual-item item-red"></div>
+                            <div class="visual-item item-blue"></div>
+                            <div class="visual-item item-blue"></div>
+                        </div>
+                        <p style="text-align:center; margin-bottom:15px;">3 red + 2 blue = 5 total marbles</p>
+
+                        <div class="steps-box">
+                            <div class="step-row">
+                                <div class="step-num">1</div>
+                                <div class="step-label">Analyze</div>
+                                <div class="step-content">Want: Red marbles → <strong>3</strong><br>Total marbles → <strong>5</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">2</div>
+                                <div class="step-label">Fraction</div>
+                                <div class="step-content">3 ÷ 5 = <strong>3/5</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">3</div>
+                                <div class="step-label">Percent</div>
+                                <div class="step-content">3/5 = 0.6 = <strong>60%</strong></div>
+                            </div>
+                            <div class="answer-box">
+                                <div class="final">P(Red) = 3/5 = 60%</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            3: {
+                title: "Dice Probability",
+                content: `
+                    <div class="concept-card">
+                        <div class="concept-emoji">🎲</div>
+                        <div class="concept-text">
+                            A die has <strong>6 faces</strong>: 1, 2, 3, 4, 5, 6
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-text"><strong>Example 1: Rolling a 4</strong></div>
+                        <div class="steps-box">
+                            <div class="step-row">
+                                <div class="step-num">1</div>
+                                <div class="step-label">Analyze</div>
+                                <div class="step-content">Want: Rolling 4 → <strong>1 way</strong><br>Total faces → <strong>6</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">2</div>
+                                <div class="step-label">Fraction</div>
+                                <div class="step-content">1 ÷ 6 = <strong>1/6</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">3</div>
+                                <div class="step-label">Percent</div>
+                                <div class="step-content">1/6 = 0.167 = <strong>16.7%</strong></div>
+                            </div>
+                            <div class="answer-box">
+                                <div class="final">P(4) = 1/6 ≈ 16.7%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-text"><strong>Example 2: Rolling an Even Number</strong></div>
+                        <div class="steps-box">
+                            <div class="step-row">
+                                <div class="step-num">1</div>
+                                <div class="step-label">Analyze</div>
+                                <div class="step-content">Want: Even numbers (2, 4, 6) → <strong>3 ways</strong><br>Total faces → <strong>6</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">2</div>
+                                <div class="step-label">Fraction</div>
+                                <div class="step-content">3 ÷ 6 = <strong>3/6 = 1/2</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">3</div>
+                                <div class="step-label">Percent</div>
+                                <div class="step-content">1/2 = 0.5 = <strong>50%</strong></div>
+                            </div>
+                            <div class="answer-box">
+                                <div class="final">P(Even) = 1/2 = 50%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="demo-box">
+                        <div class="demo-title">Roll the dice!</div>
+                        <div class="dice" onclick="lessonDiceRoll()">⚀</div>
+                        <div class="result-display" id="lesson-dice-result">Click to roll!</div>
+                    </div>
+                `
+            },
+            4: {
+                title: "Card Probability",
+                content: `
+                    <div class="concept-card">
+                        <div class="concept-emoji">🃏</div>
+                        <div class="concept-text">
+                            A deck has <strong>52 cards</strong><br>
+                            4 suits (♥ ♦ ♠ ♣) × 13 cards each
+                        </div>
+                        <div class="visual-example">
+                            <span style="font-size: 2rem; color: #e74c3c;">♥ ♦</span>
+                            <span style="font-size: 2rem;">♠ ♣</span>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-text"><strong>Example 1: Drawing a Heart</strong></div>
+                        <div class="steps-box">
+                            <div class="step-row">
+                                <div class="step-num">1</div>
+                                <div class="step-label">Analyze</div>
+                                <div class="step-content">Want: Hearts → <strong>13 cards</strong><br>Total cards → <strong>52</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">2</div>
+                                <div class="step-label">Fraction</div>
+                                <div class="step-content">13 ÷ 52 = <strong>13/52 = 1/4</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">3</div>
+                                <div class="step-label">Percent</div>
+                                <div class="step-content">1/4 = 0.25 = <strong>25%</strong></div>
+                            </div>
+                            <div class="answer-box">
+                                <div class="final">P(Heart) = 1/4 = 25%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-text"><strong>Example 2: Drawing an Ace</strong></div>
+                        <div class="steps-box">
+                            <div class="step-row">
+                                <div class="step-num">1</div>
+                                <div class="step-label">Analyze</div>
+                                <div class="step-content">Want: Aces → <strong>4 cards</strong> (one per suit)<br>Total cards → <strong>52</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">2</div>
+                                <div class="step-label">Fraction</div>
+                                <div class="step-content">4 ÷ 52 = <strong>4/52 = 1/13</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">3</div>
+                                <div class="step-label">Percent</div>
+                                <div class="step-content">1/13 = 0.077 = <strong>7.7%</strong></div>
+                            </div>
+                            <div class="answer-box">
+                                <div class="final">P(Ace) = 1/13 ≈ 7.7%</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            5: {
+                title: "NOT Probability",
+                content: `
+                    <div class="formula-display">
+                        <h3>🔄 THE COMPLEMENT RULE</h3>
+                        <div class="formula-big">
+                            P(NOT A) = 1 − P(A)
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <strong>Tip:</strong> "NOT happening" + "happening" always = 100%
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-text"><strong>Example: NOT Picking Red</strong></div>
+                        <p style="text-align:center;">Bag has 3 red, 7 blue marbles (10 total)</p>
+                        <div class="steps-box">
+                            <div class="step-row">
+                                <div class="step-num">1</div>
+                                <div class="step-label">Analyze</div>
+                                <div class="step-content">First find P(red):<br>Red marbles → <strong>3</strong>, Total → <strong>10</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">2</div>
+                                <div class="step-label">Fraction</div>
+                                <div class="step-content">P(red) = 3/10 = <strong>30%</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">3</div>
+                                <div class="step-label">Subtract</div>
+                                <div class="step-content">P(NOT red) = 100% − 30% = <strong>70%</strong></div>
+                            </div>
+                            <div class="answer-box">
+                                <div class="final">P(NOT Red) = 7/10 = 70%</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            6: {
+                title: "Two Events",
+                content: `
+                    <div class="concept-card">
+                        <div class="concept-emoji">🎲🎲</div>
+                        <div class="concept-text">
+                            For <strong>independent events</strong>, multiply the probabilities!<br>
+                            Two dice = 6 × 6 = <strong>36 total outcomes</strong>
+                        </div>
+                    </div>
+
+                    <div class="concept-card">
+                        <div class="concept-text"><strong>Example: Rolling Two Sixes</strong></div>
+                        <div class="steps-box">
+                            <div class="step-row">
+                                <div class="step-num">1</div>
+                                <div class="step-label">Analyze</div>
+                                <div class="step-content">P(first die = 6) = <strong>1/6</strong><br>P(second die = 6) = <strong>1/6</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">2</div>
+                                <div class="step-label">Multiply</div>
+                                <div class="step-content">1/6 × 1/6 = <strong>1/36</strong></div>
+                            </div>
+                            <div class="step-row">
+                                <div class="step-num">3</div>
+                                <div class="step-label">Percent</div>
+                                <div class="step-content">1/36 = 0.028 = <strong>2.8%</strong></div>
+                            </div>
+                            <div class="answer-box">
+                                <div class="final">P(Two 6s) = 1/36 ≈ 2.8%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <strong>Fun fact:</strong> Sum of 7 is most likely because there are 6 ways to make it:<br>
+                        (1+6), (2+5), (3+4), (4+3), (5+2), (6+1) → P = 6/36 = 16.7%
+                    </div>
+                `
+            }
+        };
+
+        function startLesson(num) {
+            const btn = document.getElementById('learn-' + num);
+            if (num > 1 && (!btn || btn.classList.contains('locked'))) return;
+
+            const lesson = lessons[num];
+            document.getElementById('lesson-content').innerHTML = `
+                <div class="lesson-title">${lesson.title}</div>
+                ${lesson.content}
+                <button class="next-btn" onclick="completeLesson(${num})">Complete ✓</button>
+            `;
+            goTo('lesson-screen');
+        }
+
+        function completeLesson(num) {
+            if (!game.lessonsComplete.has(num)) {
+                game.lessonsComplete.add(num);
+                addXP(30);
+                if (game.lessonsComplete.size >= 6) unlock('badge-learn-all');
+            }
+            updateUI();
+            goTo('learn-select');
+
+            // Mark as complete
+            const btn = document.querySelector(`#learn-select .level-btn:nth-child(${num})`);
+            if (btn) btn.classList.add('completed');
+        }
+
+        function lessonCoinFlip() {
+            const coin = document.querySelector('#lesson-screen .coin');
+            coin.classList.add('flipping');
+            setTimeout(() => {
+                const result = Math.random() < 0.5 ? 'HEADS 😊' : 'TAILS 🦅';
+                document.getElementById('lesson-coin-result').innerHTML = result;
+                coin.classList.remove('flipping');
+            }, 800);
+        }
+
+        function lessonDiceRoll() {
+            const dice = document.querySelector('#lesson-screen .dice');
+            const faces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+            dice.classList.add('rolling');
+            setTimeout(() => {
+                const num = Math.floor(Math.random() * 6);
+                dice.textContent = faces[num];
+                document.getElementById('lesson-dice-result').innerHTML = `You rolled: <strong>${num + 1}</strong>`;
+                dice.classList.remove('rolling');
+            }, 400);
+        }
+
+        // QUIZZES
+        const quizzes = {
+            1: {
+                question: "A bag has 4 red and 6 blue marbles. What's P(blue)?",
+                visual: `<div class="quiz-visual">
+                    ${'<div class="visual-item item-red" style="width:40px;height:40px;"></div>'.repeat(4)}
+                    ${'<div class="visual-item item-blue" style="width:40px;height:40px;"></div>'.repeat(6)}
+                </div>`,
+                options: ["4/10", "6/10", "1/2", "6/4"],
+                correct: 1,
+                hint: "Count blue ÷ total"
+            },
+            2: {
+                question: "Rolling a die, what's P(even number)?",
+                visual: `<div class="quiz-visual" style="font-size: 2rem;">⚀ ⚁ ⚂ ⚃ ⚄ ⚅</div>`,
+                options: ["1/6", "2/6", "3/6", "4/6"],
+                correct: 2,
+                hint: "Even: 2, 4, 6 → 3 out of 6"
+            },
+            3: {
+                question: "Spinner has 8 equal parts (1-8). What's P(number > 5)?",
+                visual: "",
+                options: ["3/8", "5/8", "2/8", "4/8"],
+                correct: 0,
+                hint: "Numbers > 5: 6, 7, 8"
+            },
+            4: {
+                question: "From 52 cards, what's P(King)?",
+                visual: `<div class="quiz-visual" style="font-size: 2rem;">👑 👑 👑 👑</div>`,
+                options: ["1/52", "4/52", "13/52", "1/4"],
+                correct: 1,
+                hint: "4 Kings in a deck"
+            },
+            5: {
+                question: "If P(rain) = 0.3, what's P(no rain)?",
+                visual: `<div class="quiz-visual" style="font-size: 3rem;">🌧️ → ☀️ ?</div>`,
+                options: ["0.3", "0.7", "1.3", "0.5"],
+                correct: 1,
+                hint: "P(NOT A) = 1 - P(A)"
+            },
+            6: {
+                question: "Rolling 2 dice, what's P(both are 6)?",
+                visual: `<div class="quiz-visual" style="font-size: 2.5rem;">🎲 🎲 = ⚅ ⚅ ?</div>`,
+                options: ["1/6", "2/36", "1/36", "6/36"],
+                correct: 2,
+                hint: "Multiply: 1/6 × 1/6"
+            }
+        };
+
+        let currentQuiz = null;
+        let quizAnswered = false;
+
+        function startQuiz(num) {
+            const btn = document.getElementById('quiz-' + num);
+            if (num > 2 && (!btn || btn.classList.contains('locked'))) return;
+
+            currentQuiz = num;
+            quizAnswered = false;
+            const q = quizzes[num];
+
+            document.getElementById('quiz-content').innerHTML = `
+                <div class="quiz-card">
+                    <div class="quiz-progress">
+                        ${[1,2,3,4,5,6].map(i => `<div class="quiz-dot ${i === num ? 'active' : ''} ${game.quizzesComplete.has(i) ? 'correct' : ''}"></div>`).join('')}
+                    </div>
+                    <div class="quiz-question">${q.question}</div>
+                    ${q.visual}
+                    <div class="quiz-options">
+                        ${q.options.map((opt, i) => `<button class="quiz-option" onclick="selectQuizAnswer(${i})">${opt}</button>`).join('')}
+                    </div>
+                    <button class="hint-btn" onclick="toggleHint()">💡 Hint</button>
+                    <div class="hint-text" id="quiz-hint">${q.hint}</div>
+                    <div class="quiz-feedback" id="quiz-feedback"></div>
+                </div>
+            `;
+            goTo('quiz-screen');
+        }
+
+        function selectQuizAnswer(idx) {
+            if (quizAnswered) return;
+            quizAnswered = true;
+
+            const q = quizzes[currentQuiz];
+            const options = document.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById('quiz-feedback');
+
+            options.forEach((opt, i) => {
+                opt.disabled = true;
+                if (i === q.correct) opt.classList.add('correct');
+                else if (i === idx) opt.classList.add('wrong');
+            });
+
+            if (idx === q.correct) {
+                feedback.className = 'quiz-feedback show correct';
+                feedback.innerHTML = '🎉 Correct! +50 XP';
+                addXP(50);
+                game.streak++;
+                if (!game.quizzesComplete.has(currentQuiz)) {
+                    game.quizzesComplete.add(currentQuiz);
+                    unlock('badge-quiz-1');
+                }
+                if (game.streak >= 3) unlock('badge-streak-3');
+            } else {
+                feedback.className = 'quiz-feedback show wrong';
+                feedback.innerHTML = '❌ Not quite! Answer shown above.';
+                game.streak = 0;
+            }
+
+            updateUI();
+
+            setTimeout(() => {
+                feedback.innerHTML += `<br><button class="demo-btn" style="margin-top:15px;" onclick="goTo('quiz-select')">Continue →</button>`;
+            }, 1000);
+        }
+
+        function toggleHint() {
+            document.getElementById('quiz-hint').classList.toggle('show');
+        }
+
+        // PLAYGROUND
+        const diceEmoji = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+        function playCoinFlip() {
+            const coin = document.getElementById('play-coin');
+            coin.classList.add('flipping');
+            setTimeout(() => {
+                const isHeads = Math.random() < 0.5;
+                coin.textContent = isHeads ? '😊' : '🦅';
+                document.getElementById('coin-result').textContent = isHeads ? 'HEADS' : 'TAILS';
+                game.coins[isHeads ? 'heads' : 'tails']++;
+                document.getElementById('coin-heads').textContent = game.coins.heads;
+                document.getElementById('coin-tails').textContent = game.coins.tails;
+                coin.classList.remove('flipping');
+
+                if (game.coins.heads + game.coins.tails === 1) unlock('badge-first-flip');
+            }, 800);
+        }
+
+        function multiCoin(n) {
+            for (let i = 0; i < n; i++) setTimeout(playCoinFlip, i * 150);
+        }
+
+        function resetCoin() {
+            game.coins = { heads: 0, tails: 0 };
+            document.getElementById('play-coin').textContent = '🪙';
+            document.getElementById('coin-result').textContent = '-';
+            document.getElementById('coin-heads').textContent = '0';
+            document.getElementById('coin-tails').textContent = '0';
+        }
+
+        function playDiceRoll() {
+            const dice = document.getElementById('play-dice');
+            dice.classList.add('rolling');
+            setTimeout(() => {
+                const num = Math.floor(Math.random() * 6);
+                dice.textContent = diceEmoji[num];
+                document.getElementById('dice-result').textContent = num + 1;
+                game.dice.total++;
+                if (num === 5) game.dice.sixes++;
+                document.getElementById('dice-total').textContent = game.dice.total;
+                document.getElementById('dice-six').textContent = game.dice.sixes;
+                dice.classList.remove('rolling');
+
+                if (game.dice.total >= 10) unlock('badge-dice-10');
+            }, 400);
+        }
+
+        function multiDice(n) {
+            for (let i = 0; i < n; i++) setTimeout(playDiceRoll, i * 100);
+        }
+
+        function resetDice() {
+            game.dice = { total: 0, sixes: 0 };
+            document.getElementById('play-dice').textContent = '⚀';
+            document.getElementById('dice-result').textContent = '-';
+            document.getElementById('dice-total').textContent = '0';
+            document.getElementById('dice-six').textContent = '0';
+        }
+
+        function playSpinner() {
+            const spinner = document.getElementById('play-spinner');
+            if (spinner.classList.contains('spinning')) return;
+
+            const deg = 1800 + Math.random() * 1440;
+            spinner.style.setProperty('--spin-deg', deg + 'deg');
+            spinner.classList.add('spinning');
+
+            setTimeout(() => {
+                const final = deg % 360;
+                // Calculate which section is under the arrow (at top)
+                // When spinner rotates clockwise, the section under arrow was originally at (360 - final)
+                const sectionAngle = (360 - final) % 360;
+                let result;
+                if (sectionAngle < 90) result = 'RED';
+                else if (sectionAngle < 180) result = 'GREEN';
+                else if (sectionAngle < 270) result = 'YELLOW';
+                else result = 'PURPLE';
+
+                document.getElementById('spinner-result').textContent = result;
+                spinner.classList.remove('spinning');
+                spinner.style.transform = `rotate(${final}deg)`;
+
+                game.spins++;
+                if (game.spins >= 5) unlock('badge-spinner');
+            }, 3000);
+        }
+
+        function resetSpinner() {
+            document.getElementById('play-spinner').style.transform = 'rotate(0)';
+            document.getElementById('spinner-result').textContent = '-';
+        }
+
+        // DRAG & DROP
+        function initDrag() {
+            const items = document.querySelectorAll('.drag-item');
+            const zones = document.querySelectorAll('.drop-zone, #drag-source');
+
+            items.forEach(item => {
+                item.addEventListener('dragstart', e => {
+                    e.dataTransfer.setData('text', e.target.dataset.val);
+                    e.target.classList.add('dragging');
+                });
+                item.addEventListener('dragend', e => e.target.classList.remove('dragging'));
+            });
+
+            zones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+                zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    const val = e.dataTransfer.getData('text');
+                    const item = document.querySelector(`.drag-item[data-val="${val}"]`);
+                    if (item) zone.appendChild(item);
+                });
+            });
+        }
+
+        function checkSort() {
+            const evenZone = document.getElementById('zone-even');
+            const oddZone = document.getElementById('zone-odd');
+            const feedback = document.getElementById('sort-feedback');
+
+            let correct = true;
+            evenZone.querySelectorAll('.drag-item').forEach(i => {
+                if (parseInt(i.dataset.val) % 2 !== 0) correct = false;
+            });
+            oddZone.querySelectorAll('.drag-item').forEach(i => {
+                if (parseInt(i.dataset.val) % 2 !== 1) correct = false;
+            });
+            if (evenZone.querySelectorAll('.drag-item').length !== 3) correct = false;
+            if (oddZone.querySelectorAll('.drag-item').length !== 3) correct = false;
+
+            if (correct) {
+                feedback.innerHTML = '<span style="color: var(--success);">🎉 Perfect!</span>';
+                unlock('badge-sort');
+                addXP(25);
+            } else {
+                feedback.innerHTML = '<span style="color: var(--secondary);">Try again! Even: 2,4,6 | Odd: 1,3,5</span>';
+            }
+        }
+
+        function resetSort() {
+            const source = document.getElementById('drag-source');
+            document.querySelectorAll('.drag-item').forEach(i => source.appendChild(i));
+            document.getElementById('sort-feedback').innerHTML = '';
+        }
+
+        // INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            initDrag();
+            updateUI();
+        });
+    </script>
+</body>
+</html>
