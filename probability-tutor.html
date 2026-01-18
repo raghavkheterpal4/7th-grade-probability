@@ -362,19 +362,24 @@
             background: #ffe0b2;
         }
 
-        /* FAQ Answer Box */
+        /* FAQ Answer Box - Unfold Animation */
         .faq-answer {
-            display: none;
             background: #e3f2fd;
             border: 2px solid #2196f3;
             border-radius: 15px;
-            padding: 20px;
             margin: 15px 0;
-            animation: fadeIn 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 20px;
+            opacity: 0;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out, opacity 0.3s ease-out, margin 0.4s ease-out;
         }
 
         .faq-answer.show {
-            display: block;
+            max-height: 500px;
+            padding: 20px;
+            opacity: 1;
+            margin: 15px 0;
         }
 
         .faq-answer h4 {
@@ -764,17 +769,22 @@
 
         /* Simple Explanation */
         .simple-explanation {
-            display: none;
-            background: #e3f2fd;
-            border: 2px solid #2196f3;
+            background: #fff3e0;
+            border: 2px solid #ff9800;
             border-radius: 15px;
-            padding: 25px;
             margin: 20px 0;
-            animation: fadeIn 0.5s ease;
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 25px;
+            opacity: 0;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out, opacity 0.3s ease-out, margin 0.4s ease-out;
         }
 
         .simple-explanation.show {
-            display: block;
+            max-height: 500px;
+            padding: 25px;
+            opacity: 1;
+            margin: 20px 0;
         }
 
         .simple-explanation h4 {
@@ -1068,11 +1078,79 @@
                             <span>I don't understand - explain it differently</span>
                         </button>
                     </div>
+
+                    <!-- FAQ Answers (unfold here, pushing Quick Check down) -->
+                    <div class="faq-answer" id="faq-intro-1">
+                        <h4>❓ Why can't probability be more than 1?</h4>
+                        <p>Great question! Think of it this way:</p>
+                        <ul style="margin: 10px 20px;">
+                            <li><strong>1 means 100% sure</strong> - it WILL happen</li>
+                            <li>You can't be MORE than 100% sure of something!</li>
+                            <li>That's like saying you're "200% sure" - it doesn't make sense</li>
+                        </ul>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('intro', 1)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="faq-answer" id="faq-intro-2">
+                        <h4>❓ What's the difference between 0.5 and 50%?</h4>
+                        <p>They're actually the <strong>same thing</strong>, just written differently!</p>
+                        <div class="calculation">
+                            0.5 = 50/100 = 50%
+                        </div>
+                        <p>It's like how you can say "half" or "1/2" or "0.5" or "50%" - all the same meaning!</p>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('intro', 2)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="faq-answer" id="faq-intro-3">
+                        <h4>❓ Real-Life Example</h4>
+                        <p>Here are some examples you might know:</p>
+                        <ul style="margin: 10px 20px;">
+                            <li>☀️ <strong>Weather forecast says 80% chance of sun</strong> - that's a probability of 0.8 (likely!)</li>
+                            <li>🎮 <strong>50% chance to get a rare item in a game</strong> - that's a probability of 0.5 (could go either way)</li>
+                            <li>🎂 <strong>0% chance of snow in summer</strong> - that's a probability of 0 (not happening!)</li>
+                        </ul>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('intro', 3)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="simple-explanation" id="simple-intro">
+                        <h4>🆘 Let's Think About It Another Way...</h4>
+                        <p>Imagine a jar with 10 balls - 5 red and 5 blue:</p>
+                        <div class="visual-container">
+                            <div class="marble-bag" style="min-width: auto; padding: 15px;">
+                                <div class="marbles">
+                                    <div class="marble red"></div>
+                                    <div class="marble red"></div>
+                                    <div class="marble red"></div>
+                                    <div class="marble red"></div>
+                                    <div class="marble red"></div>
+                                    <div class="marble blue"></div>
+                                    <div class="marble blue"></div>
+                                    <div class="marble blue"></div>
+                                    <div class="marble blue"></div>
+                                    <div class="marble blue"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul style="margin: 15px 20px;">
+                            <li><strong>0 = Never happens</strong> - like picking a GREEN ball (there are none!)</li>
+                            <li><strong>0.5 = Maybe yes, maybe no</strong> - like picking a RED ball (half are red)</li>
+                            <li><strong>1 = Always happens</strong> - like picking a ball that's red OR blue (they all are!)</li>
+                        </ul>
+                        <div class="button-group">
+                            <button class="btn btn-success" onclick="nextSection()">Got it! Let's continue</button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- QUICK CHECK QUESTION -->
+                <!-- YOUR TURN - ANSWER TO CONTINUE -->
                 <div class="quick-check" id="check-intro">
-                    <h3>✏️ Quick Check</h3>
+                    <h3>✏️ Your Turn - Answer to Continue</h3>
                     <p><strong>If something is CERTAIN to happen, what is its probability?</strong></p>
                     <div class="quick-check-options">
                         <div class="quick-check-option" onclick="checkQuickAnswer('intro', 'a', this)">A) 0</div>
@@ -1088,74 +1166,6 @@
                     </div>
                     <div class="quick-check-feedback incorrect" id="check-intro-incorrect">
                         <strong>✗ Not quite.</strong> Remember: 0 = impossible, 1 = certain. Try again!
-                    </div>
-                </div>
-
-                <!-- FAQ Answers -->
-                <div class="faq-answer" id="faq-intro-1">
-                    <h4>❓ Why can't probability be more than 1?</h4>
-                    <p>Great question! Think of it this way:</p>
-                    <ul style="margin: 10px 20px;">
-                        <li><strong>1 means 100% sure</strong> - it WILL happen</li>
-                        <li>You can't be MORE than 100% sure of something!</li>
-                        <li>That's like saying you're "200% sure" - it doesn't make sense</li>
-                    </ul>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('intro', 1)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="faq-answer" id="faq-intro-2">
-                    <h4>❓ What's the difference between 0.5 and 50%?</h4>
-                    <p>They're actually the <strong>same thing</strong>, just written differently!</p>
-                    <div class="calculation">
-                        0.5 = 50/100 = 50%
-                    </div>
-                    <p>It's like how you can say "half" or "1/2" or "0.5" or "50%" - all the same meaning!</p>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('intro', 2)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="faq-answer" id="faq-intro-3">
-                    <h4>❓ Real-Life Example</h4>
-                    <p>Here are some examples you might know:</p>
-                    <ul style="margin: 10px 20px;">
-                        <li>☀️ <strong>Weather forecast says 80% chance of sun</strong> - that's a probability of 0.8 (likely!)</li>
-                        <li>🎮 <strong>50% chance to get a rare item in a game</strong> - that's a probability of 0.5 (could go either way)</li>
-                        <li>🎂 <strong>0% chance of snow in summer</strong> - that's a probability of 0 (not happening!)</li>
-                    </ul>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('intro', 3)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="simple-explanation" id="simple-intro">
-                    <h4>🆘 Let's Think About It Another Way...</h4>
-                    <p>Imagine a jar with 10 balls - 5 red and 5 blue:</p>
-                    <div class="visual-container">
-                        <div class="marble-bag" style="min-width: auto; padding: 15px;">
-                            <div class="marbles">
-                                <div class="marble red"></div>
-                                <div class="marble red"></div>
-                                <div class="marble red"></div>
-                                <div class="marble red"></div>
-                                <div class="marble red"></div>
-                                <div class="marble blue"></div>
-                                <div class="marble blue"></div>
-                                <div class="marble blue"></div>
-                                <div class="marble blue"></div>
-                                <div class="marble blue"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <ul style="margin: 15px 20px;">
-                        <li><strong>0 = Never happens</strong> - like picking a GREEN ball (there are none!)</li>
-                        <li><strong>0.5 = Maybe yes, maybe no</strong> - like picking a RED ball (half are red)</li>
-                        <li><strong>1 = Always happens</strong> - like picking a ball that's red OR blue (they all are!)</li>
-                    </ul>
-                    <div class="button-group">
-                        <button class="btn btn-success" onclick="nextSection()">Got it! Let's continue</button>
                     </div>
                 </div>
             </div>
@@ -1252,11 +1262,66 @@
                             <span>I don't understand - explain it differently</span>
                         </button>
                     </div>
+
+                    <!-- FAQ Answers (unfold here, pushing Quick Check down) -->
+                    <div class="faq-answer" id="faq-formula-1">
+                        <h4>❓ What does "favorable outcome" mean?</h4>
+                        <p>A <strong>favorable outcome</strong> is simply the result you're looking for!</p>
+                        <ul style="margin: 10px 20px;">
+                            <li>If you want to roll a 6 → "6" is your favorable outcome</li>
+                            <li>If you want a red marble → "red marble" is favorable</li>
+                            <li>If you want heads → "heads" is favorable</li>
+                        </ul>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('formula', 1)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="faq-answer" id="faq-formula-2">
+                        <h4>❓ How do I count "total outcomes"?</h4>
+                        <p>Count <strong>ALL the possible things</strong> that could happen:</p>
+                        <ul style="margin: 10px 20px;">
+                            <li>🎲 Die: 6 total outcomes (1, 2, 3, 4, 5, or 6)</li>
+                            <li>🪙 Coin: 2 total outcomes (heads or tails)</li>
+                            <li>🎯 4-color spinner: 4 total outcomes</li>
+                            <li>Bag with 5 marbles: 5 total outcomes</li>
+                        </ul>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('formula', 2)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="faq-answer" id="faq-formula-3">
+                        <h4>❓ Another Example</h4>
+                        <p>You have a pizza with 8 slices. 3 slices have pepperoni.</p>
+                        <p style="font-size: 30px; text-align: center;">🍕🍕🍕🍕🍕🍕🍕🍕</p>
+                        <p>If you grab a random slice, what's the probability of getting pepperoni?</p>
+                        <div class="calculation">
+                            P(pepperoni) = 3 (pepperoni slices) ÷ 8 (total slices) = 3/8 ≈ 37.5%
+                        </div>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('formula', 3)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="simple-explanation" id="simple-formula">
+                        <h4>🆘 Let's Make It Even Simpler...</h4>
+                        <p>Think of it like this:</p>
+                        <p style="font-size: 22px; text-align: center; margin: 20px 0; padding: 20px; background: white; border-radius: 10px;">
+                            <strong>"How many ways can I WIN?"</strong><br>
+                            ➗<br>
+                            <strong>"How many total things could happen?"</strong>
+                        </p>
+                        <p>It's like asking: "Out of ALL the possibilities, how many are the ones I want?"</p>
+                        <div class="button-group">
+                            <button class="btn btn-success" onclick="nextSection()">That makes sense! Continue</button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- QUICK CHECK QUESTION -->
+                <!-- YOUR TURN - ANSWER TO CONTINUE -->
                 <div class="quick-check" id="check-formula">
-                    <h3>✏️ Quick Check</h3>
+                    <h3>✏️ Your Turn - Answer to Continue</h3>
                     <p><strong>Using the marble bag above, what's the probability of picking a BLUE marble?</strong></p>
                     <p style="font-size: 14px; color: #666;">(There are 2 blue marbles and 5 total marbles)</p>
                     <div class="quick-check-options">
@@ -1273,61 +1338,6 @@
                     </div>
                     <div class="quick-check-feedback incorrect" id="check-formula-incorrect">
                         <strong>✗ Not quite.</strong> Remember: Put what you want (blue = 2) on top, total (5) on bottom. Try again!
-                    </div>
-                </div>
-
-                <!-- FAQ Answers -->
-                <div class="faq-answer" id="faq-formula-1">
-                    <h4>❓ What does "favorable outcome" mean?</h4>
-                    <p>A <strong>favorable outcome</strong> is simply the result you're looking for!</p>
-                    <ul style="margin: 10px 20px;">
-                        <li>If you want to roll a 6 → "6" is your favorable outcome</li>
-                        <li>If you want a red marble → "red marble" is favorable</li>
-                        <li>If you want heads → "heads" is favorable</li>
-                    </ul>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('formula', 1)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="faq-answer" id="faq-formula-2">
-                    <h4>❓ How do I count "total outcomes"?</h4>
-                    <p>Count <strong>ALL the possible things</strong> that could happen:</p>
-                    <ul style="margin: 10px 20px;">
-                        <li>🎲 Die: 6 total outcomes (1, 2, 3, 4, 5, or 6)</li>
-                        <li>🪙 Coin: 2 total outcomes (heads or tails)</li>
-                        <li>🎯 4-color spinner: 4 total outcomes</li>
-                        <li>Bag with 5 marbles: 5 total outcomes</li>
-                    </ul>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('formula', 2)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="faq-answer" id="faq-formula-3">
-                    <h4>❓ Another Example</h4>
-                    <p>You have a pizza with 8 slices. 3 slices have pepperoni.</p>
-                    <p style="font-size: 30px; text-align: center;">🍕🍕🍕🍕🍕🍕🍕🍕</p>
-                    <p>If you grab a random slice, what's the probability of getting pepperoni?</p>
-                    <div class="calculation">
-                        P(pepperoni) = 3 (pepperoni slices) ÷ 8 (total slices) = 3/8 ≈ 37.5%
-                    </div>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('formula', 3)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="simple-explanation" id="simple-formula">
-                    <h4>🆘 Let's Make It Even Simpler...</h4>
-                    <p>Think of it like this:</p>
-                    <p style="font-size: 22px; text-align: center; margin: 20px 0; padding: 20px; background: white; border-radius: 10px;">
-                        <strong>"How many ways can I WIN?"</strong><br>
-                        ➗<br>
-                        <strong>"How many total things could happen?"</strong>
-                    </p>
-                    <p>It's like asking: "Out of ALL the possibilities, how many are the ones I want?"</p>
-                    <div class="button-group">
-                        <button class="btn btn-success" onclick="nextSection()">That makes sense! Continue</button>
                     </div>
                 </div>
             </div>
@@ -1415,11 +1425,63 @@
                             <span>I don't understand - explain it differently</span>
                         </button>
                     </div>
+
+                    <!-- FAQ Answers (unfold here, pushing Quick Check down) -->
+                    <div class="faq-answer" id="faq-coin-1">
+                        <h4>❓ Why is heads and tails both 50%?</h4>
+                        <p>Because they're <strong>equally likely</strong>!</p>
+                        <ul style="margin: 10px 20px;">
+                            <li>There's 1 heads side out of 2 → 1/2 = 50%</li>
+                            <li>There's 1 tails side out of 2 → 1/2 = 50%</li>
+                            <li>Together they add up to 100%!</li>
+                        </ul>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('coin', 1)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="faq-answer" id="faq-coin-2">
+                        <h4>❓ What if I flip the coin twice?</h4>
+                        <p>Each flip is <strong>independent</strong> - the coin doesn't remember!</p>
+                        <ul style="margin: 10px 20px;">
+                            <li>First flip: 50% heads, 50% tails</li>
+                            <li>Second flip: Still 50% heads, 50% tails!</li>
+                            <li>Even after 10 heads in a row, the next flip is still 50/50</li>
+                        </ul>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('coin', 2)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="faq-answer" id="faq-coin-3">
+                        <h4>❓ Is a real coin exactly 50/50?</h4>
+                        <p>Almost! Real coins are <strong>very close to 50/50</strong>.</p>
+                        <p>For our math, we assume a "fair coin" that is exactly 50/50. This is called <strong>theoretical probability</strong>.</p>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('coin', 3)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="simple-explanation" id="simple-coin">
+                        <h4>🆘 Let's Think About It This Way...</h4>
+                        <p>Imagine flipping a coin many times:</p>
+                        <div style="font-size: 24px; text-align: center; margin: 15px 0;">
+                            👑 🦅 👑 🦅 👑 🦅 👑 🦅 👑 🦅
+                        </div>
+                        <ul style="margin: 15px 20px;">
+                            <li>Out of every <strong>2 flips</strong>, expect about <strong>1 heads</strong></li>
+                            <li>Out of every <strong>10 flips</strong>, expect about <strong>5 heads</strong></li>
+                            <li>Out of every <strong>100 flips</strong>, expect about <strong>50 heads</strong></li>
+                        </ul>
+                        <div class="button-group">
+                            <button class="btn btn-success" onclick="nextSection()">I get it now! Continue</button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- QUICK CHECK QUESTION -->
+                <!-- YOUR TURN - ANSWER TO CONTINUE -->
                 <div class="quick-check" id="check-coin">
-                    <h3>✏️ Quick Check</h3>
+                    <h3>✏️ Your Turn - Answer to Continue</h3>
                     <p><strong>What is the probability of getting HEADS when you flip a coin?</strong></p>
                     <div class="quick-check-options">
                         <div class="quick-check-option" onclick="checkQuickAnswer('coin', 'a', this)">A) 1/4 (25%)</div>
@@ -1435,58 +1497,6 @@
                     </div>
                     <div class="quick-check-feedback incorrect" id="check-coin-incorrect">
                         <strong>✗ Not quite.</strong> Remember: A coin has 2 sides. Heads is 1 of those 2 sides. Try again!
-                    </div>
-                </div>
-
-                <!-- FAQ Answers -->
-                <div class="faq-answer" id="faq-coin-1">
-                    <h4>❓ Why is heads and tails both 50%?</h4>
-                    <p>Because they're <strong>equally likely</strong>!</p>
-                    <ul style="margin: 10px 20px;">
-                        <li>There's 1 heads side out of 2 → 1/2 = 50%</li>
-                        <li>There's 1 tails side out of 2 → 1/2 = 50%</li>
-                        <li>Together they add up to 100%!</li>
-                    </ul>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('coin', 1)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="faq-answer" id="faq-coin-2">
-                    <h4>❓ What if I flip the coin twice?</h4>
-                    <p>Each flip is <strong>independent</strong> - the coin doesn't remember!</p>
-                    <ul style="margin: 10px 20px;">
-                        <li>First flip: 50% heads, 50% tails</li>
-                        <li>Second flip: Still 50% heads, 50% tails!</li>
-                        <li>Even after 10 heads in a row, the next flip is still 50/50</li>
-                    </ul>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('coin', 2)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="faq-answer" id="faq-coin-3">
-                    <h4>❓ Is a real coin exactly 50/50?</h4>
-                    <p>Almost! Real coins are <strong>very close to 50/50</strong>.</p>
-                    <p>For our math, we assume a "fair coin" that is exactly 50/50. This is called <strong>theoretical probability</strong>.</p>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('coin', 3)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="simple-explanation" id="simple-coin">
-                    <h4>🆘 Let's Think About It This Way...</h4>
-                    <p>Imagine flipping a coin many times:</p>
-                    <div style="font-size: 24px; text-align: center; margin: 15px 0;">
-                        👑 🦅 👑 🦅 👑 🦅 👑 🦅 👑 🦅
-                    </div>
-                    <ul style="margin: 15px 20px;">
-                        <li>Out of every <strong>2 flips</strong>, expect about <strong>1 heads</strong></li>
-                        <li>Out of every <strong>10 flips</strong>, expect about <strong>5 heads</strong></li>
-                        <li>Out of every <strong>100 flips</strong>, expect about <strong>50 heads</strong></li>
-                    </ul>
-                    <div class="button-group">
-                        <button class="btn btn-success" onclick="nextSection()">I get it now! Continue</button>
                     </div>
                 </div>
             </div>
@@ -1673,11 +1683,67 @@
                             <span>I don't understand - explain it differently</span>
                         </button>
                     </div>
+
+                    <!-- FAQ Answers (unfold here, pushing Quick Check down) -->
+                    <div class="faq-answer" id="faq-dice-1">
+                        <h4>❓ Why is each number 1/6?</h4>
+                        <p>Because a die has exactly <strong>6 sides</strong>!</p>
+                        <ul style="margin: 10px 20px;">
+                            <li>Each side is equally likely to land face up</li>
+                            <li>So each number has a 1 out of 6 chance = 1/6</li>
+                        </ul>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('dice', 1)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="faq-answer" id="faq-dice-2">
+                        <h4>❓ How do I know which numbers to count?</h4>
+                        <p>Read the question and look for keywords:</p>
+                        <ul style="margin: 10px 20px;">
+                            <li><strong>"Even number"</strong> → 2, 4, 6</li>
+                            <li><strong>"Odd number"</strong> → 1, 3, 5</li>
+                            <li><strong>"Greater than 4"</strong> → 5, 6 (NOT 4!)</li>
+                            <li><strong>"Less than 3"</strong> → 1, 2</li>
+                        </ul>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('dice', 2)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="faq-answer" id="faq-dice-3">
+                        <h4>❓ What if I want to roll a 7?</h4>
+                        <p>On a standard 6-sided die, <strong>rolling a 7 is impossible!</strong></p>
+                        <div class="calculation">
+                            P(rolling 7) = 0/6 = 0
+                        </div>
+                        <p>There are 0 ways to roll a 7, so the probability is 0!</p>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('dice', 3)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="simple-explanation" id="simple-dice">
+                        <h4>🆘 Let's Picture It...</h4>
+                        <p>Think of the 6 sides as 6 equal chances:</p>
+                        <div style="display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap;">
+                            <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚀<br>1 of 6</div>
+                            <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚁<br>1 of 6</div>
+                            <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚂<br>1 of 6</div>
+                            <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚃<br>1 of 6</div>
+                            <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚄<br>1 of 6</div>
+                            <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚅<br>1 of 6</div>
+                        </div>
+                        <p>For <strong>multiple numbers</strong>, just add them! Want 5 or 6? That's 2 out of 6 = 1/3.</p>
+                        <div class="button-group">
+                            <button class="btn btn-success" onclick="nextSection()">That helps! Continue</button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- QUICK CHECK QUESTION -->
+                <!-- YOUR TURN - ANSWER TO CONTINUE -->
                 <div class="quick-check" id="check-dice">
-                    <h3>✏️ Quick Check</h3>
+                    <h3>✏️ Your Turn - Answer to Continue</h3>
                     <p><strong>What's the probability of rolling an ODD number (1, 3, or 5)?</strong></p>
                     <div class="quick-check-options">
                         <div class="quick-check-option" onclick="checkQuickAnswer('dice', 'a', this)">A) 1/6</div>
@@ -1687,65 +1753,12 @@
                     </div>
                     <div class="quick-check-feedback correct" id="check-dice-correct">
                         <strong>✓ Correct!</strong> There are 3 odd numbers (1, 3, 5) out of 6 total. P(odd) = 3/6 = 1/2 = 50%
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="nextSection()">Continue to Practice</button>
+                        </div>
                     </div>
                     <div class="quick-check-feedback incorrect" id="check-dice-incorrect">
                         <strong>✗ Not quite.</strong> Count the odd numbers: 1, 3, 5. That's 3 numbers out of 6 total. Try again!
-                    </div>
-                </div>
-
-                <!-- FAQ Answers -->
-                <div class="faq-answer" id="faq-dice-1">
-                    <h4>❓ Why is each number 1/6?</h4>
-                    <p>Because a die has exactly <strong>6 sides</strong>!</p>
-                    <ul style="margin: 10px 20px;">
-                        <li>Each side is equally likely to land face up</li>
-                        <li>So each number has a 1 out of 6 chance = 1/6</li>
-                    </ul>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('dice', 1)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="faq-answer" id="faq-dice-2">
-                    <h4>❓ How do I know which numbers to count?</h4>
-                    <p>Read the question and look for keywords:</p>
-                    <ul style="margin: 10px 20px;">
-                        <li><strong>"Even number"</strong> → 2, 4, 6</li>
-                        <li><strong>"Odd number"</strong> → 1, 3, 5</li>
-                        <li><strong>"Greater than 4"</strong> → 5, 6 (NOT 4!)</li>
-                        <li><strong>"Less than 3"</strong> → 1, 2</li>
-                    </ul>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('dice', 2)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="faq-answer" id="faq-dice-3">
-                    <h4>❓ What if I want to roll a 7?</h4>
-                    <p>On a standard 6-sided die, <strong>rolling a 7 is impossible!</strong></p>
-                    <div class="calculation">
-                        P(rolling 7) = 0/6 = 0
-                    </div>
-                    <p>There are 0 ways to roll a 7, so the probability is 0!</p>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('dice', 3)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="simple-explanation" id="simple-dice">
-                    <h4>🆘 Let's Picture It...</h4>
-                    <p>Think of the 6 sides as 6 equal chances:</p>
-                    <div style="display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap;">
-                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚀<br>1 of 6</div>
-                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚁<br>1 of 6</div>
-                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚂<br>1 of 6</div>
-                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚃<br>1 of 6</div>
-                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚄<br>1 of 6</div>
-                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚅<br>1 of 6</div>
-                    </div>
-                    <p>For <strong>multiple numbers</strong>, just add them! Want 5 or 6? That's 2 out of 6 = 1/3.</p>
-                    <div class="button-group">
-                        <button class="btn btn-success" onclick="nextSection()">That helps! Continue</button>
                     </div>
                 </div>
             </div>
@@ -1857,11 +1870,55 @@
                             <span>I don't understand - explain it differently</span>
                         </button>
                     </div>
+
+                    <!-- FAQ Answers (unfold here, pushing Quick Check down) -->
+                    <div class="faq-answer" id="faq-spinner-1">
+                        <h4>❓ What if sections aren't equal size?</h4>
+                        <p>Bigger sections = higher probability. For now, we use <strong>equal sections</strong> which makes the math simpler!</p>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('spinner', 1)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="faq-answer" id="faq-spinner-2">
+                        <h4>❓ How is 1/4 the same as 25%?</h4>
+                        <div class="calculation">
+                            1/4 = 1 ÷ 4 = 0.25 = 25%
+                        </div>
+                        <p>Multiply decimal by 100 to get percent: 0.25 × 100 = 25%</p>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('spinner', 2)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="faq-answer" id="faq-spinner-3">
+                        <h4>❓ What if two sections are the same color?</h4>
+                        <p>Count BOTH! If 2 sections are red out of 4 total:</p>
+                        <div class="calculation">
+                            P(red) = 2/4 = 1/2 = 50%
+                        </div>
+                        <div class="close-faq">
+                            <button class="btn btn-secondary" onclick="hideFaqAnswer('spinner', 3)">Got it!</button>
+                        </div>
+                    </div>
+
+                    <div class="simple-explanation" id="simple-spinner">
+                        <h4>🆘 Think About It Like Pizza...</h4>
+                        <p style="font-size: 40px; text-align: center;">🍕 = 4 slices</p>
+                        <ul style="margin: 15px 20px;">
+                            <li>Each color is 1 slice out of 4</li>
+                            <li>Each has 1/4 = 25% chance</li>
+                            <li>Spin 4 times → expect each color once!</li>
+                        </ul>
+                        <div class="button-group">
+                            <button class="btn btn-success" onclick="nextSection()">Makes sense! Continue</button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- QUICK CHECK QUESTION -->
+                <!-- YOUR TURN - ANSWER TO CONTINUE -->
                 <div class="quick-check" id="check-spinner">
-                    <h3>✏️ Quick Check</h3>
+                    <h3>✏️ Your Turn - Answer to Continue</h3>
                     <p><strong>What's the probability of NOT landing on Yellow?</strong></p>
                     <p style="font-size: 14px; color: #666;">(Hint: Count all sections that are NOT yellow)</p>
                     <div class="quick-check-options">
@@ -1872,53 +1929,12 @@
                     </div>
                     <div class="quick-check-feedback correct" id="check-spinner-correct">
                         <strong>✓ Correct!</strong> NOT yellow = Red, Blue, or Green. That's 3 out of 4. P(not yellow) = 3/4 = 75%
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="nextSection()">Continue to Practice</button>
+                        </div>
                     </div>
                     <div class="quick-check-feedback incorrect" id="check-spinner-incorrect">
                         <strong>✗ Not quite.</strong> "Not yellow" means any of the OTHER colors: Red, Blue, Green. That's 3 sections. Try again!
-                    </div>
-                </div>
-
-                <!-- FAQ Answers -->
-                <div class="faq-answer" id="faq-spinner-1">
-                    <h4>❓ What if sections aren't equal size?</h4>
-                    <p>Bigger sections = higher probability. For now, we use <strong>equal sections</strong> which makes the math simpler!</p>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('spinner', 1)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="faq-answer" id="faq-spinner-2">
-                    <h4>❓ How is 1/4 the same as 25%?</h4>
-                    <div class="calculation">
-                        1/4 = 1 ÷ 4 = 0.25 = 25%
-                    </div>
-                    <p>Multiply decimal by 100 to get percent: 0.25 × 100 = 25%</p>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('spinner', 2)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="faq-answer" id="faq-spinner-3">
-                    <h4>❓ What if two sections are the same color?</h4>
-                    <p>Count BOTH! If 2 sections are red out of 4 total:</p>
-                    <div class="calculation">
-                        P(red) = 2/4 = 1/2 = 50%
-                    </div>
-                    <div class="close-faq">
-                        <button class="btn btn-secondary" onclick="hideFaqAnswer('spinner', 3)">Got it!</button>
-                    </div>
-                </div>
-
-                <div class="simple-explanation" id="simple-spinner">
-                    <h4>🆘 Think About It Like Pizza...</h4>
-                    <p style="font-size: 40px; text-align: center;">🍕 = 4 slices</p>
-                    <ul style="margin: 15px 20px;">
-                        <li>Each color is 1 slice out of 4</li>
-                        <li>Each has 1/4 = 25% chance</li>
-                        <li>Spin 4 times → expect each color once!</li>
-                    </ul>
-                    <div class="button-group">
-                        <button class="btn btn-success" onclick="nextSection()">Makes sense! Continue</button>
                     </div>
                 </div>
             </div>
