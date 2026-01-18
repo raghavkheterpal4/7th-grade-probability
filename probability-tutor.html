@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability Quest - Learn Probability!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #f0f0f0;
+            padding: 15px 25px;
+            border-bottom: 2px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-title {
+            font-size: 16px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .progress-percent {
+            font-size: 18px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* Main Content Area */
+        .content {
+            padding: 30px;
+            min-height: 500px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 26px;
+            color: #764ba2;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            font-size: 22px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        /* Formula Box */
+        .formula-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 22px;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .formula-box .formula {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #f8f9ff;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(17, 153, 142, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        /* Quick Check Question Box */
+        .quick-check {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 2px solid #4caf50;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+
+        .quick-check h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-check-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .quick-check-option {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 17px;
+        }
+
+        .quick-check-option:hover {
+            border-color: #4caf50;
+            background: #f1f8e9;
+        }
+
+        .quick-check-option.correct {
+            border-color: #4caf50;
+            background: #c8e6c9;
+        }
+
+        .quick-check-option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .quick-check-option.disabled {
+            pointer-events: none;
+        }
+
+        .quick-check-feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .quick-check-feedback.show {
+            display: block;
+        }
+
+        .quick-check-feedback.correct {
+            background: #c8e6c9;
+            border: 2px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .quick-check-feedback.incorrect {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            color: #c62828;
+        }
+
+        /* Understanding Check - FAQ Style */
+        .understanding-check {
+            background: #fff9e6;
+            border: 2px solid #ffc107;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .understanding-check h3 {
+            color: #ff9800;
+            margin-bottom: 15px;
+        }
+
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .faq-btn {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .faq-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(5px);
+        }
+
+        .faq-btn .faq-icon {
+            font-size: 20px;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .faq-btn.continue-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .faq-btn.continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(17, 153, 142, 0.4);
+        }
+
+        .faq-btn.help-btn {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .faq-btn.help-btn:hover {
+            background: #ffe0b2;
+        }
+
+        /* FAQ Answer Box */
+        .faq-answer {
+            display: none;
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .faq-answer.show {
+            display: block;
+        }
+
+        .faq-answer h4 {
+            color: #1565c0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .faq-answer .close-faq {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        /* Practice Problem */
+        .practice-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border: 2px solid #4caf50;
+        }
+
+        .practice-box h3 {
+            color: #2e7d32;
+        }
+
+        /* Multiple Choice Options */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .option {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            text-align: left;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+
+        .option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .option.disabled {
+            pointer-events: none;
+        }
+
+        /* Feedback Messages */
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .feedback.incorrect {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            color: #e65100;
+        }
+
+        /* Visual Examples - Enhanced */
+        .visual-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 25px 0;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Interactive Coin */
+        .coin-interactive {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .coin-interactive:hover {
+            transform: scale(1.05);
+        }
+
+        .coin-interactive.heads {
+            background: linear-gradient(145deg, #ffd700, #ffb300);
+            color: #5d4037;
+            border: 4px solid #c49000;
+        }
+
+        .coin-interactive.tails {
+            background: linear-gradient(145deg, #c0c0c0, #a0a0a0);
+            color: #424242;
+            border: 4px solid #808080;
+        }
+
+        .coin-interactive .coin-inner {
+            text-align: center;
+        }
+
+        .coin-interactive .coin-label {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Animated Coin Flip */
+        .flip-coin-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .flip-coin {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ffd700, #ffb300);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+
+        .flip-coin.flipping {
+            animation: coinFlip 0.6s ease-in-out;
+        }
+
+        @keyframes coinFlip {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(900deg); }
+            100% { transform: rotateY(1800deg); }
+        }
+
+        /* Marble Bag Visual */
+        .marble-bag {
+            background: linear-gradient(145deg, #8B4513, #654321);
+            padding: 20px;
+            border-radius: 0 0 40px 40px;
+            border-top: 8px solid #5D3A1A;
+            position: relative;
+            min-width: 200px;
+        }
+
+        .marble-bag::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 20px;
+            background: #5D3A1A;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .marbles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .marble {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            box-shadow: inset -3px -3px 8px rgba(0,0,0,0.3), 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .marble.red { background: linear-gradient(135deg, #ff6b6b, #c0392b); }
+        .marble.blue { background: linear-gradient(135deg, #74b9ff, #2980b9); }
+
+        /* Spinner */
+        .spinner-container {
+            position: relative;
+            width: 220px;
+            height: 220px;
+        }
+
+        .spinner-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+        }
+
+        /* Example Box */
+        .example-box {
+            background: #f3e5f5;
+            border: 2px solid #9c27b0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .example-box h4 {
+            color: #7b1fa2;
+            margin-bottom: 10px;
+        }
+
+        .calculation {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 18px;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        /* Visual Formula Breakdown */
+        .formula-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .formula-part {
+            background: #f0f0f0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .formula-part.numerator {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+        }
+
+        .formula-part.denominator {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+        }
+
+        .formula-part .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .formula-part .label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .formula-symbol {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Probability Number Line */
+        .number-line-visual {
+            position: relative;
+            height: 120px;
+            margin: 30px 20px;
+        }
+
+        .number-line {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #f44336, #ff9800, #ffeb3b, #8bc34a, #4caf50);
+            border-radius: 4px;
+        }
+
+        .number-line-markers {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .marker {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .marker .value {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .marker .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        /* Quiz Section */
+        .quiz-question {
+            background: #f8f9ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #667eea;
+        }
+
+        .quiz-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        /* Results */
+        .results-box {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .celebration {
+            font-size: 48px;
+            margin: 20px 0;
+        }
+
+        /* Simple Explanation */
+        .simple-explanation {
+            display: none;
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .simple-explanation.show {
+            display: block;
+        }
+
+        .simple-explanation h4 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        /* Summary List */
+        .summary-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .summary-list li {
+            padding: 15px 20px;
+            background: #f8f9ff;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            font-size: 18px;
+        }
+
+        .summary-list li strong {
+            color: #667eea;
+        }
+
+        /* Milestone Message */
+        .milestone {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            h1 { font-size: 26px; }
+            h2 { font-size: 22px; }
+            h3 { font-size: 20px; }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .formula-box {
+                font-size: 18px;
+            }
+
+            .formula-box .formula {
+                font-size: 18px;
+            }
+
+            .faq-btn {
+                font-size: 14px;
+                padding: 12px 15px;
+            }
+        }
+
+        /* Welcome mascot */
+        .mascot {
+            font-size: 64px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Visual diagram */
+        .visual-diagram {
+            background: #fafafa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .visual-diagram h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        /* Candy jar visual */
+        .candy-jar {
+            background: linear-gradient(to bottom, transparent 0%, rgba(200,230,255,0.3) 100%);
+            border: 4px solid #90caf9;
+            border-radius: 10px 10px 30px 30px;
+            padding: 15px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .candy-jar::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 15px;
+            background: #90caf9;
+            border-radius: 5px;
+        }
+
+        .candies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            max-width: 150px;
+        }
+
+        .candy {
+            width: 25px;
+            height: 25px;
+            border-radius: 5px;
+        }
+
+        .candy.chocolate { background: linear-gradient(135deg, #8B4513, #654321); }
+        .candy.gummy { background: linear-gradient(135deg, #ff6b6b, #ee5a5a); }
+
+        .dice-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .die-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .die-label {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-title">Probability Quest</span>
+                <span class="progress-percent" id="progressPercent">0% Complete</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- SECTION 1: Welcome -->
+            <div class="section active" id="section-welcome">
+                <div class="mascot">🎲</div>
+                <h1>Welcome to Probability Quest!</h1>
+                <p style="text-align: center; font-size: 20px;">
+                    Get ready to discover the exciting world of <span class="highlight">probability</span> -
+                    the math of chance and likelihood!
+                </p>
+
+                <div class="visual-diagram">
+                    <h4>What will we explore?</h4>
+                    <div style="font-size: 40px; margin: 15px 0;">
+                        🪙 🎲 🎯
+                    </div>
+                    <p>Coins, Dice, Spinners, and more!</p>
+                </div>
+
+                <div class="info-box">
+                    <h3>What You'll Learn Today:</h3>
+                    <p>By the end of this lesson, you'll be able to:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Understand what probability means</li>
+                        <li>Use a formula to calculate probability</li>
+                        <li>Solve real-world probability problems</li>
+                        <li>Express probability as fractions, decimals, and percentages</li>
+                    </ul>
+                </div>
+
+                <p style="text-align: center; margin-top: 20px;">
+                    This lesson takes about 35-40 minutes. Take your time and have fun learning!
+                </p>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="nextSection()">Let's Get Started!</button>
+                </div>
+            </div>
+
+            <!-- SECTION 2: What is Probability? -->
+            <div class="section" id="section-intro">
+                <h2>What is Probability?</h2>
+
+                <div class="info-box">
+                    <p><strong>Probability</strong> is a way to measure <span class="highlight">how likely</span> something is to happen.</p>
+                </div>
+
+                <p>Think about these everyday questions:</p>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                    <li>Will it rain tomorrow? ☔</li>
+                    <li>Will I win a game? 🏆</li>
+                    <li>Will I pick a red candy from a bag? 🍬</li>
+                </ul>
+
+                <p>Probability helps us answer questions like these with <strong>numbers</strong> instead of just guessing!</p>
+
+                <!-- Enhanced Number Line Visual -->
+                <div class="visual-diagram">
+                    <h4>The Probability Scale</h4>
+                    <div class="number-line-visual">
+                        <div class="number-line"></div>
+                        <div class="number-line-markers">
+                            <div class="marker">
+                                <div class="icon">❌</div>
+                                <div class="value">0</div>
+                                <div>Impossible</div>
+                            </div>
+                            <div class="marker">
+                                <div class="icon">🤔</div>
+                                <div class="value">0.25</div>
+                                <div>Unlikely</div>
+                            </div>
+                            <div class="marker">
+                                <div class="icon">⚖️</div>
+                                <div class="value">0.5</div>
+                                <div>Even Chance</div>
+                            </div>
+                            <div class="marker">
+                                <div class="icon">👍</div>
+                                <div class="value">0.75</div>
+                                <div>Likely</div>
+                            </div>
+                            <div class="marker">
+                                <div class="icon">✅</div>
+                                <div class="value">1</div>
+                                <div>Certain</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>Key Facts:</h3>
+                    <ul style="margin-left: 20px;">
+                        <li>Probability ranges from <strong>0</strong> (impossible) to <strong>1</strong> (certain)</li>
+                        <li>We can write probability as a <strong>fraction</strong> (like 1/2)</li>
+                        <li>We can write it as a <strong>decimal</strong> (like 0.5)</li>
+                        <li>We can write it as a <strong>percentage</strong> (like 50%)</li>
+                    </ul>
+                </div>
+
+                <!-- QUICK CHECK QUESTION -->
+                <div class="quick-check" id="check-intro">
+                    <h3>✏️ Quick Check</h3>
+                    <p><strong>If something is CERTAIN to happen, what is its probability?</strong></p>
+                    <div class="quick-check-options">
+                        <div class="quick-check-option" onclick="checkQuickAnswer('intro', 'a', this)">A) 0</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('intro', 'b', this)">B) 0.5</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('intro', 'c', this)">C) 1</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('intro', 'd', this)">D) 2</div>
+                    </div>
+                    <div class="quick-check-feedback correct" id="check-intro-correct">
+                        <strong>✓ Correct!</strong> A probability of 1 means something is certain to happen - 100% sure!
+                    </div>
+                    <div class="quick-check-feedback incorrect" id="check-intro-incorrect">
+                        <strong>✗ Not quite.</strong> Remember: 0 = impossible, 1 = certain. Try again!
+                    </div>
+                </div>
+
+                <!-- FAQ Section (shown after correct answer) -->
+                <div class="understanding-check" id="faq-section-intro" style="display: none;">
+                    <h3>🤔 Any Questions?</h3>
+                    <p>Click a question below or continue to the next section.</p>
+
+                    <div class="faq-container">
+                        <button class="faq-btn" onclick="showFaqAnswer('intro', 1)">
+                            <span class="faq-icon">❓</span>
+                            <span>Why can't probability be more than 1?</span>
+                        </button>
+                        <button class="faq-btn" onclick="showFaqAnswer('intro', 2)">
+                            <span class="faq-icon">❓</span>
+                            <span>What's the difference between 0.5 and 50%?</span>
+                        </button>
+                        <button class="faq-btn" onclick="showFaqAnswer('intro', 3)">
+                            <span class="faq-icon">❓</span>
+                            <span>Can you give me a real-life example?</span>
+                        </button>
+                        <button class="faq-btn help-btn" onclick="showSimpleExplanation('intro')">
+                            <span class="faq-icon">🆘</span>
+                            <span>I need more help understanding this</span>
+                        </button>
+                        <button class="faq-btn continue-btn" onclick="nextSection()">
+                            <span>✓ I'm ready! Continue to next section</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FAQ Answers -->
+                <div class="faq-answer" id="faq-intro-1">
+                    <h4>❓ Why can't probability be more than 1?</h4>
+                    <p>Great question! Think of it this way:</p>
+                    <ul style="margin: 10px 20px;">
+                        <li><strong>1 means 100% sure</strong> - it WILL happen</li>
+                        <li>You can't be MORE than 100% sure of something!</li>
+                        <li>That's like saying you're "200% sure" - it doesn't make sense</li>
+                    </ul>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('intro', 1)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="faq-answer" id="faq-intro-2">
+                    <h4>❓ What's the difference between 0.5 and 50%?</h4>
+                    <p>They're actually the <strong>same thing</strong>, just written differently!</p>
+                    <div class="calculation">
+                        0.5 = 50/100 = 50%
+                    </div>
+                    <p>It's like how you can say "half" or "1/2" or "0.5" or "50%" - all the same meaning!</p>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('intro', 2)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="faq-answer" id="faq-intro-3">
+                    <h4>❓ Real-Life Example</h4>
+                    <p>Here are some examples you might know:</p>
+                    <ul style="margin: 10px 20px;">
+                        <li>☀️ <strong>Weather forecast says 80% chance of sun</strong> - that's a probability of 0.8 (likely!)</li>
+                        <li>🎮 <strong>50% chance to get a rare item in a game</strong> - that's a probability of 0.5 (could go either way)</li>
+                        <li>🎂 <strong>0% chance of snow in summer</strong> - that's a probability of 0 (not happening!)</li>
+                    </ul>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('intro', 3)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="simple-explanation" id="simple-intro">
+                    <h4>🆘 Let's Think About It Another Way...</h4>
+                    <p>Imagine a jar with 10 balls - 5 red and 5 blue:</p>
+                    <div class="visual-container">
+                        <div class="marble-bag" style="min-width: auto; padding: 15px;">
+                            <div class="marbles">
+                                <div class="marble red"></div>
+                                <div class="marble red"></div>
+                                <div class="marble red"></div>
+                                <div class="marble red"></div>
+                                <div class="marble red"></div>
+                                <div class="marble blue"></div>
+                                <div class="marble blue"></div>
+                                <div class="marble blue"></div>
+                                <div class="marble blue"></div>
+                                <div class="marble blue"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul style="margin: 15px 20px;">
+                        <li><strong>0 = Never happens</strong> - like picking a GREEN ball (there are none!)</li>
+                        <li><strong>0.5 = Maybe yes, maybe no</strong> - like picking a RED ball (half are red)</li>
+                        <li><strong>1 = Always happens</strong> - like picking a ball that's red OR blue (they all are!)</li>
+                    </ul>
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="nextSection()">Got it! Let's continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: The Formula -->
+            <div class="section" id="section-formula">
+                <h2>The Probability Formula</h2>
+
+                <p>Now let's learn how to <strong>calculate</strong> probability. We use a simple formula:</p>
+
+                <div class="formula-box">
+                    <div>The Probability Formula</div>
+                    <div class="formula">
+                        P(event) = Favorable Outcomes ÷ Total Outcomes
+                    </div>
+                    <div style="font-size: 16px; margin-top: 10px;">
+                        (What you want) ÷ (Everything that could happen)
+                    </div>
+                </div>
+
+                <!-- Visual Formula Breakdown -->
+                <div class="visual-diagram">
+                    <h4>Let's See It Visually</h4>
+                    <div class="formula-visual">
+                        <div class="formula-part numerator">
+                            <div class="number">?</div>
+                            <div class="label">What you WANT<br>(favorable outcomes)</div>
+                        </div>
+                        <div class="formula-symbol">÷</div>
+                        <div class="formula-part denominator">
+                            <div class="number">?</div>
+                            <div class="label">EVERYTHING possible<br>(total outcomes)</div>
+                        </div>
+                        <div class="formula-symbol">=</div>
+                        <div class="formula-part" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                            <div class="number">P</div>
+                            <div class="label">Probability!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>Quick Example: Marble Bag</h4>
+                    <p>If you have a bag with 3 red marbles and 2 blue marbles:</p>
+                    <div class="visual-container">
+                        <div class="marble-bag">
+                            <div class="marbles">
+                                <div class="marble red"></div>
+                                <div class="marble red"></div>
+                                <div class="marble red"></div>
+                                <div class="marble blue"></div>
+                                <div class="marble blue"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center;">What's the probability of picking a <strong style="color: #c0392b;">red marble</strong>?</p>
+                    <div class="formula-visual">
+                        <div class="formula-part numerator">
+                            <div class="number">3</div>
+                            <div class="label">red marbles</div>
+                        </div>
+                        <div class="formula-symbol">÷</div>
+                        <div class="formula-part denominator">
+                            <div class="number">5</div>
+                            <div class="label">total marbles</div>
+                        </div>
+                        <div class="formula-symbol">=</div>
+                        <div class="formula-part" style="background: #e8f5e9; border-color: #4caf50;">
+                            <div class="number">3/5</div>
+                            <div class="label">or 60%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK CHECK QUESTION -->
+                <div class="quick-check" id="check-formula">
+                    <h3>✏️ Quick Check</h3>
+                    <p><strong>Using the marble bag above, what's the probability of picking a BLUE marble?</strong></p>
+                    <p style="font-size: 14px; color: #666;">(There are 2 blue marbles and 5 total marbles)</p>
+                    <div class="quick-check-options">
+                        <div class="quick-check-option" onclick="checkQuickAnswer('formula', 'a', this)">A) 2/3</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('formula', 'b', this)">B) 2/5</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('formula', 'c', this)">C) 5/2</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('formula', 'd', this)">D) 3/5</div>
+                    </div>
+                    <div class="quick-check-feedback correct" id="check-formula-correct">
+                        <strong>✓ Correct!</strong> P(blue) = 2 blue marbles ÷ 5 total marbles = 2/5 = 40%
+                    </div>
+                    <div class="quick-check-feedback incorrect" id="check-formula-incorrect">
+                        <strong>✗ Not quite.</strong> Remember: Put what you want (blue = 2) on top, total (5) on bottom. Try again!
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="understanding-check" id="faq-section-formula" style="display: none;">
+                    <h3>🤔 Any Questions?</h3>
+                    <div class="faq-container">
+                        <button class="faq-btn" onclick="showFaqAnswer('formula', 1)">
+                            <span class="faq-icon">❓</span>
+                            <span>What does "favorable outcome" mean?</span>
+                        </button>
+                        <button class="faq-btn" onclick="showFaqAnswer('formula', 2)">
+                            <span class="faq-icon">❓</span>
+                            <span>How do I count "total outcomes"?</span>
+                        </button>
+                        <button class="faq-btn" onclick="showFaqAnswer('formula', 3)">
+                            <span class="faq-icon">❓</span>
+                            <span>Can you show me another example?</span>
+                        </button>
+                        <button class="faq-btn help-btn" onclick="showSimpleExplanation('formula')">
+                            <span class="faq-icon">🆘</span>
+                            <span>I need more help understanding this</span>
+                        </button>
+                        <button class="faq-btn continue-btn" onclick="nextSection()">
+                            <span>✓ I'm ready! Continue to next section</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FAQ Answers -->
+                <div class="faq-answer" id="faq-formula-1">
+                    <h4>❓ What does "favorable outcome" mean?</h4>
+                    <p>A <strong>favorable outcome</strong> is simply the result you're looking for!</p>
+                    <ul style="margin: 10px 20px;">
+                        <li>If you want to roll a 6 → "6" is your favorable outcome</li>
+                        <li>If you want a red marble → "red marble" is favorable</li>
+                        <li>If you want heads → "heads" is favorable</li>
+                    </ul>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('formula', 1)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="faq-answer" id="faq-formula-2">
+                    <h4>❓ How do I count "total outcomes"?</h4>
+                    <p>Count <strong>ALL the possible things</strong> that could happen:</p>
+                    <ul style="margin: 10px 20px;">
+                        <li>🎲 Die: 6 total outcomes (1, 2, 3, 4, 5, or 6)</li>
+                        <li>🪙 Coin: 2 total outcomes (heads or tails)</li>
+                        <li>🎯 4-color spinner: 4 total outcomes</li>
+                        <li>Bag with 5 marbles: 5 total outcomes</li>
+                    </ul>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('formula', 2)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="faq-answer" id="faq-formula-3">
+                    <h4>❓ Another Example</h4>
+                    <p>You have a pizza with 8 slices. 3 slices have pepperoni.</p>
+                    <p style="font-size: 30px; text-align: center;">🍕🍕🍕🍕🍕🍕🍕🍕</p>
+                    <p>If you grab a random slice, what's the probability of getting pepperoni?</p>
+                    <div class="calculation">
+                        P(pepperoni) = 3 (pepperoni slices) ÷ 8 (total slices) = 3/8 ≈ 37.5%
+                    </div>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('formula', 3)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="simple-explanation" id="simple-formula">
+                    <h4>🆘 Let's Make It Even Simpler...</h4>
+                    <p>Think of it like this:</p>
+                    <p style="font-size: 22px; text-align: center; margin: 20px 0; padding: 20px; background: white; border-radius: 10px;">
+                        <strong>"How many ways can I WIN?"</strong><br>
+                        ➗<br>
+                        <strong>"How many total things could happen?"</strong>
+                    </p>
+                    <p>It's like asking: "Out of ALL the possibilities, how many are the ones I want?"</p>
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="nextSection()">That makes sense! Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: Coin Flip Example -->
+            <div class="section" id="section-coin">
+                <h2>Example 1: Flipping a Coin</h2>
+
+                <p>Let's use our formula with something simple - a coin flip!</p>
+
+                <div class="visual-container">
+                    <div class="coin-interactive heads">
+                        <div class="coin-inner">
+                            <div style="font-size: 24px;">👑</div>
+                            <div class="coin-label">HEADS</div>
+                        </div>
+                    </div>
+                    <div class="coin-interactive tails">
+                        <div class="coin-inner">
+                            <div style="font-size: 24px;">🦅</div>
+                            <div class="coin-label">TAILS</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <p>A coin has <strong>2 sides</strong>: Heads and Tails</p>
+                    <p>When you flip a coin, there are <strong>2 possible outcomes</strong>.</p>
+                </div>
+
+                <div class="example-box">
+                    <h4>What's the probability of getting HEADS?</h4>
+                    <div class="formula-visual">
+                        <div class="formula-part numerator">
+                            <div class="number">1</div>
+                            <div class="label">heads side</div>
+                        </div>
+                        <div class="formula-symbol">÷</div>
+                        <div class="formula-part denominator">
+                            <div class="number">2</div>
+                            <div class="label">total sides</div>
+                        </div>
+                        <div class="formula-symbol">=</div>
+                        <div class="formula-part" style="background: #e8f5e9; border-color: #4caf50;">
+                            <div class="number">1/2</div>
+                            <div class="label">50%</div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px;">
+                        This means there's a <strong>50% chance</strong> (or "even chance") of getting heads!
+                    </p>
+                </div>
+
+                <!-- Try It Yourself -->
+                <div class="visual-diagram">
+                    <h4>Try It! Click the coin to flip it</h4>
+                    <div class="flip-coin-container">
+                        <div class="flip-coin" id="interactive-coin" onclick="flipCoin()">
+                            HEADS
+                        </div>
+                        <p id="flip-result" style="margin-top: 15px; font-weight: bold;"></p>
+                        <p id="flip-stats" style="color: #666; font-size: 14px;"></p>
+                    </div>
+                </div>
+
+                <!-- QUICK CHECK QUESTION -->
+                <div class="quick-check" id="check-coin">
+                    <h3>✏️ Quick Check</h3>
+                    <p><strong>If you flip a coin, what is P(heads) + P(tails)?</strong></p>
+                    <p style="font-size: 14px; color: #666;">(Hint: Add the two probabilities together)</p>
+                    <div class="quick-check-options">
+                        <div class="quick-check-option" onclick="checkQuickAnswer('coin', 'a', this)">A) 1/2</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('coin', 'b', this)">B) 1</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('coin', 'c', this)">C) 2</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('coin', 'd', this)">D) 0</div>
+                    </div>
+                    <div class="quick-check-feedback correct" id="check-coin-correct">
+                        <strong>✓ Correct!</strong> P(heads) + P(tails) = 1/2 + 1/2 = 1. All probabilities for all outcomes always add up to 1!
+                    </div>
+                    <div class="quick-check-feedback incorrect" id="check-coin-incorrect">
+                        <strong>✗ Not quite.</strong> P(heads) = 1/2 and P(tails) = 1/2. What is 1/2 + 1/2? Try again!
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="understanding-check" id="faq-section-coin" style="display: none;">
+                    <h3>🤔 Any Questions?</h3>
+                    <div class="faq-container">
+                        <button class="faq-btn" onclick="showFaqAnswer('coin', 1)">
+                            <span class="faq-icon">❓</span>
+                            <span>Why is heads and tails both 50%?</span>
+                        </button>
+                        <button class="faq-btn" onclick="showFaqAnswer('coin', 2)">
+                            <span class="faq-icon">❓</span>
+                            <span>What if I flip the coin twice?</span>
+                        </button>
+                        <button class="faq-btn" onclick="showFaqAnswer('coin', 3)">
+                            <span class="faq-icon">❓</span>
+                            <span>Is a real coin exactly 50/50?</span>
+                        </button>
+                        <button class="faq-btn help-btn" onclick="showSimpleExplanation('coin')">
+                            <span class="faq-icon">🆘</span>
+                            <span>I need more help understanding this</span>
+                        </button>
+                        <button class="faq-btn continue-btn" onclick="nextSection()">
+                            <span>✓ I'm ready! Continue to practice</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FAQ Answers -->
+                <div class="faq-answer" id="faq-coin-1">
+                    <h4>❓ Why is heads and tails both 50%?</h4>
+                    <p>Because they're <strong>equally likely</strong>!</p>
+                    <ul style="margin: 10px 20px;">
+                        <li>There's 1 heads side out of 2 → 1/2 = 50%</li>
+                        <li>There's 1 tails side out of 2 → 1/2 = 50%</li>
+                        <li>Together they add up to 100%!</li>
+                    </ul>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('coin', 1)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="faq-answer" id="faq-coin-2">
+                    <h4>❓ What if I flip the coin twice?</h4>
+                    <p>Each flip is <strong>independent</strong> - the coin doesn't remember!</p>
+                    <ul style="margin: 10px 20px;">
+                        <li>First flip: 50% heads, 50% tails</li>
+                        <li>Second flip: Still 50% heads, 50% tails!</li>
+                        <li>Even after 10 heads in a row, the next flip is still 50/50</li>
+                    </ul>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('coin', 2)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="faq-answer" id="faq-coin-3">
+                    <h4>❓ Is a real coin exactly 50/50?</h4>
+                    <p>Almost! Real coins are <strong>very close to 50/50</strong>.</p>
+                    <p>For our math, we assume a "fair coin" that is exactly 50/50. This is called <strong>theoretical probability</strong>.</p>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('coin', 3)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="simple-explanation" id="simple-coin">
+                    <h4>🆘 Let's Think About It This Way...</h4>
+                    <p>Imagine flipping a coin many times:</p>
+                    <div style="font-size: 24px; text-align: center; margin: 15px 0;">
+                        👑 🦅 👑 🦅 👑 🦅 👑 🦅 👑 🦅
+                    </div>
+                    <ul style="margin: 15px 20px;">
+                        <li>Out of every <strong>2 flips</strong>, expect about <strong>1 heads</strong></li>
+                        <li>Out of every <strong>10 flips</strong>, expect about <strong>5 heads</strong></li>
+                        <li>Out of every <strong>100 flips</strong>, expect about <strong>50 heads</strong></li>
+                    </ul>
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="nextSection()">I get it now! Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: Practice 1 -->
+            <div class="section" id="section-practice1">
+                <div class="practice-box">
+                    <h3>Practice Problem 1</h3>
+                    <p style="font-size: 20px; margin: 20px 0;">
+                        Using the same coin, what's the probability of flipping <strong>TAILS</strong>?
+                    </p>
+
+                    <div class="visual-container">
+                        <div class="coin-interactive heads">
+                            <div class="coin-inner">
+                                <div style="font-size: 24px;">👑</div>
+                                <div class="coin-label">HEADS</div>
+                            </div>
+                        </div>
+                        <div class="coin-interactive tails" style="border: 4px solid #4caf50; box-shadow: 0 0 20px rgba(76,175,80,0.5);">
+                            <div class="coin-inner">
+                                <div style="font-size: 24px;">🦅</div>
+                                <div class="coin-label">TAILS</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="options" id="practice1-options">
+                        <div class="option" onclick="checkAnswer('practice1', 'a', this)">A) 1/4 (25%)</div>
+                        <div class="option" onclick="checkAnswer('practice1', 'b', this)">B) 1/2 (50%)</div>
+                        <div class="option" onclick="checkAnswer('practice1', 'c', this)">C) 1/3 (33%)</div>
+                        <div class="option" onclick="checkAnswer('practice1', 'd', this)">D) 2/2 (100%)</div>
+                    </div>
+
+                    <div class="feedback correct" id="practice1-correct">
+                        <strong>🎉 Great job! That's right!</strong>
+                        <p>P(tails) = 1 ÷ 2 = <strong>1/2 = 50%</strong></p>
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="nextSection()">Continue to Dice Example</button>
+                        </div>
+                    </div>
+
+                    <div class="feedback incorrect" id="practice1-incorrect">
+                        <strong>Not quite, but that's okay!</strong>
+                        <p id="practice1-hint"></p>
+                        <p>Remember: P = favorable ÷ total. A coin has 2 sides!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: Dice Example -->
+            <div class="section" id="section-dice">
+                <h2>Example 2: Rolling a Die</h2>
+
+                <p>Now let's try something with more outcomes - rolling a die!</p>
+
+                <div class="visual-container">
+                    <div class="dice-container">
+                        <div class="die-wrapper">
+                            <svg width="70" height="70" viewBox="0 0 70 70">
+                                <rect x="2" y="2" width="66" height="66" rx="10" fill="white" stroke="#333" stroke-width="3"/>
+                                <circle cx="35" cy="35" r="8" fill="#333"/>
+                            </svg>
+                            <div class="die-label">1</div>
+                        </div>
+                        <div class="die-wrapper">
+                            <svg width="70" height="70" viewBox="0 0 70 70">
+                                <rect x="2" y="2" width="66" height="66" rx="10" fill="white" stroke="#333" stroke-width="3"/>
+                                <circle cx="20" cy="20" r="7" fill="#333"/>
+                                <circle cx="50" cy="50" r="7" fill="#333"/>
+                            </svg>
+                            <div class="die-label">2</div>
+                        </div>
+                        <div class="die-wrapper">
+                            <svg width="70" height="70" viewBox="0 0 70 70">
+                                <rect x="2" y="2" width="66" height="66" rx="10" fill="white" stroke="#333" stroke-width="3"/>
+                                <circle cx="20" cy="20" r="6" fill="#333"/>
+                                <circle cx="35" cy="35" r="6" fill="#333"/>
+                                <circle cx="50" cy="50" r="6" fill="#333"/>
+                            </svg>
+                            <div class="die-label">3</div>
+                        </div>
+                        <div class="die-wrapper">
+                            <svg width="70" height="70" viewBox="0 0 70 70">
+                                <rect x="2" y="2" width="66" height="66" rx="10" fill="white" stroke="#333" stroke-width="3"/>
+                                <circle cx="20" cy="20" r="6" fill="#333"/>
+                                <circle cx="50" cy="20" r="6" fill="#333"/>
+                                <circle cx="20" cy="50" r="6" fill="#333"/>
+                                <circle cx="50" cy="50" r="6" fill="#333"/>
+                            </svg>
+                            <div class="die-label">4</div>
+                        </div>
+                        <div class="die-wrapper">
+                            <svg width="70" height="70" viewBox="0 0 70 70">
+                                <rect x="2" y="2" width="66" height="66" rx="10" fill="white" stroke="#333" stroke-width="3"/>
+                                <circle cx="20" cy="20" r="6" fill="#333"/>
+                                <circle cx="50" cy="20" r="6" fill="#333"/>
+                                <circle cx="35" cy="35" r="6" fill="#333"/>
+                                <circle cx="20" cy="50" r="6" fill="#333"/>
+                                <circle cx="50" cy="50" r="6" fill="#333"/>
+                            </svg>
+                            <div class="die-label">5</div>
+                        </div>
+                        <div class="die-wrapper">
+                            <svg width="70" height="70" viewBox="0 0 70 70">
+                                <rect x="2" y="2" width="66" height="66" rx="10" fill="white" stroke="#333" stroke-width="3"/>
+                                <circle cx="20" cy="17" r="6" fill="#333"/>
+                                <circle cx="20" cy="35" r="6" fill="#333"/>
+                                <circle cx="20" cy="53" r="6" fill="#333"/>
+                                <circle cx="50" cy="17" r="6" fill="#333"/>
+                                <circle cx="50" cy="35" r="6" fill="#333"/>
+                                <circle cx="50" cy="53" r="6" fill="#333"/>
+                            </svg>
+                            <div class="die-label">6</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <p>A standard die has <strong>6 sides</strong> numbered 1, 2, 3, 4, 5, and 6.</p>
+                    <p>When you roll a die, there are <strong>6 possible outcomes</strong>.</p>
+                </div>
+
+                <div class="example-box">
+                    <h4>What's the probability of rolling a 4?</h4>
+                    <div class="formula-visual">
+                        <div class="formula-part numerator">
+                            <div class="number">1</div>
+                            <div class="label">way to get 4</div>
+                        </div>
+                        <div class="formula-symbol">÷</div>
+                        <div class="formula-part denominator">
+                            <div class="number">6</div>
+                            <div class="label">possible numbers</div>
+                        </div>
+                        <div class="formula-symbol">=</div>
+                        <div class="formula-part" style="background: #e8f5e9; border-color: #4caf50;">
+                            <div class="number">1/6</div>
+                            <div class="label">≈ 17%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>What's the probability of rolling an EVEN number (2, 4, or 6)?</h4>
+                    <p>Now we have MORE than one favorable outcome!</p>
+                    <div class="formula-visual">
+                        <div class="formula-part numerator">
+                            <div class="number">3</div>
+                            <div class="label">even numbers<br>(2, 4, 6)</div>
+                        </div>
+                        <div class="formula-symbol">÷</div>
+                        <div class="formula-part denominator">
+                            <div class="number">6</div>
+                            <div class="label">total numbers</div>
+                        </div>
+                        <div class="formula-symbol">=</div>
+                        <div class="formula-part" style="background: #e8f5e9; border-color: #4caf50;">
+                            <div class="number">1/2</div>
+                            <div class="label">50%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK CHECK QUESTION -->
+                <div class="quick-check" id="check-dice">
+                    <h3>✏️ Quick Check</h3>
+                    <p><strong>What's the probability of rolling an ODD number (1, 3, or 5)?</strong></p>
+                    <div class="quick-check-options">
+                        <div class="quick-check-option" onclick="checkQuickAnswer('dice', 'a', this)">A) 1/6</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('dice', 'b', this)">B) 2/6 = 1/3</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('dice', 'c', this)">C) 3/6 = 1/2</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('dice', 'd', this)">D) 4/6 = 2/3</div>
+                    </div>
+                    <div class="quick-check-feedback correct" id="check-dice-correct">
+                        <strong>✓ Correct!</strong> There are 3 odd numbers (1, 3, 5) out of 6 total. P(odd) = 3/6 = 1/2 = 50%
+                    </div>
+                    <div class="quick-check-feedback incorrect" id="check-dice-incorrect">
+                        <strong>✗ Not quite.</strong> Count the odd numbers: 1, 3, 5. That's 3 numbers out of 6 total. Try again!
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="understanding-check" id="faq-section-dice" style="display: none;">
+                    <h3>🤔 Any Questions?</h3>
+                    <div class="faq-container">
+                        <button class="faq-btn" onclick="showFaqAnswer('dice', 1)">
+                            <span class="faq-icon">❓</span>
+                            <span>Why is each number 1/6?</span>
+                        </button>
+                        <button class="faq-btn" onclick="showFaqAnswer('dice', 2)">
+                            <span class="faq-icon">❓</span>
+                            <span>How do I know which numbers to count?</span>
+                        </button>
+                        <button class="faq-btn" onclick="showFaqAnswer('dice', 3)">
+                            <span class="faq-icon">❓</span>
+                            <span>What if I want to roll a 7?</span>
+                        </button>
+                        <button class="faq-btn help-btn" onclick="showSimpleExplanation('dice')">
+                            <span class="faq-icon">🆘</span>
+                            <span>I need more help understanding this</span>
+                        </button>
+                        <button class="faq-btn continue-btn" onclick="nextSection()">
+                            <span>✓ I'm ready! Continue to practice</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FAQ Answers -->
+                <div class="faq-answer" id="faq-dice-1">
+                    <h4>❓ Why is each number 1/6?</h4>
+                    <p>Because a die has exactly <strong>6 sides</strong>!</p>
+                    <ul style="margin: 10px 20px;">
+                        <li>Each side is equally likely to land face up</li>
+                        <li>So each number has a 1 out of 6 chance = 1/6</li>
+                    </ul>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('dice', 1)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="faq-answer" id="faq-dice-2">
+                    <h4>❓ How do I know which numbers to count?</h4>
+                    <p>Read the question and look for keywords:</p>
+                    <ul style="margin: 10px 20px;">
+                        <li><strong>"Even number"</strong> → 2, 4, 6</li>
+                        <li><strong>"Odd number"</strong> → 1, 3, 5</li>
+                        <li><strong>"Greater than 4"</strong> → 5, 6 (NOT 4!)</li>
+                        <li><strong>"Less than 3"</strong> → 1, 2</li>
+                    </ul>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('dice', 2)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="faq-answer" id="faq-dice-3">
+                    <h4>❓ What if I want to roll a 7?</h4>
+                    <p>On a standard 6-sided die, <strong>rolling a 7 is impossible!</strong></p>
+                    <div class="calculation">
+                        P(rolling 7) = 0/6 = 0
+                    </div>
+                    <p>There are 0 ways to roll a 7, so the probability is 0!</p>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('dice', 3)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="simple-explanation" id="simple-dice">
+                    <h4>🆘 Let's Picture It...</h4>
+                    <p>Think of the 6 sides as 6 equal chances:</p>
+                    <div style="display: flex; justify-content: center; gap: 10px; margin: 20px 0; flex-wrap: wrap;">
+                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚀<br>1 of 6</div>
+                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚁<br>1 of 6</div>
+                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚂<br>1 of 6</div>
+                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚃<br>1 of 6</div>
+                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚄<br>1 of 6</div>
+                        <div style="text-align: center; padding: 10px; background: #f0f0f0; border-radius: 10px;">⚅<br>1 of 6</div>
+                    </div>
+                    <p>For <strong>multiple numbers</strong>, just add them! Want 5 or 6? That's 2 out of 6 = 1/3.</p>
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="nextSection()">That helps! Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 7: Practice 2 -->
+            <div class="section" id="section-practice2">
+                <div class="milestone">
+                    <h3>🌟 You're Halfway There! 🌟</h3>
+                    <p>Great job! Keep up the awesome work!</p>
+                </div>
+
+                <div class="practice-box">
+                    <h3>Practice Problem 2</h3>
+                    <p style="font-size: 20px; margin: 20px 0;">
+                        What's the probability of rolling a number <strong>greater than 4</strong>?
+                    </p>
+                    <p style="text-align: center; color: #666;">(Hint: Greater than 4 means 5 and 6 only - NOT including 4)</p>
+
+                    <div class="options" id="practice2-options">
+                        <div class="option" onclick="checkAnswer('practice2', 'a', this)">A) 4/6</div>
+                        <div class="option" onclick="checkAnswer('practice2', 'b', this)">B) 1/6</div>
+                        <div class="option" onclick="checkAnswer('practice2', 'c', this)">C) 2/6 = 1/3</div>
+                        <div class="option" onclick="checkAnswer('practice2', 'd', this)">D) 3/6 = 1/2</div>
+                    </div>
+
+                    <div class="feedback correct" id="practice2-correct">
+                        <strong>🎉 Excellent work!</strong>
+                        <p>Greater than 4 = only 5 and 6. That's 2 numbers out of 6.</p>
+                        <p>P(>4) = 2/6 = <strong>1/3 ≈ 33%</strong></p>
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="nextSection()">Continue to Spinner Example</button>
+                        </div>
+                    </div>
+
+                    <div class="feedback incorrect" id="practice2-incorrect">
+                        <strong>Not quite.</strong>
+                        <p id="practice2-hint"></p>
+                        <p>"Greater than 4" means 5 and 6 only. Count those and divide by 6!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 8: Spinner Example -->
+            <div class="section" id="section-spinner">
+                <h2>Example 3: Spinning a Spinner</h2>
+
+                <p>Let's try one more example with a colorful spinner!</p>
+
+                <div class="visual-container">
+                    <div class="spinner-container">
+                        <svg class="spinner-svg" viewBox="0 0 200 200">
+                            <path d="M100,100 L100,10 A90,90 0 0,1 190,100 Z" fill="#e74c3c"/>
+                            <path d="M100,100 L190,100 A90,90 0 0,1 100,190 Z" fill="#3498db"/>
+                            <path d="M100,100 L100,190 A90,90 0 0,1 10,100 Z" fill="#2ecc71"/>
+                            <path d="M100,100 L10,100 A90,90 0 0,1 100,10 Z" fill="#f1c40f"/>
+                            <circle cx="100" cy="100" r="15" fill="#333"/>
+                            <polygon points="100,25 95,50 105,50" fill="#333"/>
+                            <text x="140" y="65" fill="white" font-weight="bold" font-size="16">RED</text>
+                            <text x="135" y="150" fill="white" font-weight="bold" font-size="16">BLUE</text>
+                            <text x="25" y="150" fill="white" font-weight="bold" font-size="14">GREEN</text>
+                            <text x="20" y="65" fill="#333" font-weight="bold" font-size="12">YELLOW</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <p>This spinner has <strong>4 equal sections</strong>: Red, Blue, Green, Yellow</p>
+                </div>
+
+                <div class="example-box">
+                    <h4>What's the probability of landing on RED?</h4>
+                    <div class="formula-visual">
+                        <div class="formula-part numerator">
+                            <div class="number">1</div>
+                            <div class="label">red section</div>
+                        </div>
+                        <div class="formula-symbol">÷</div>
+                        <div class="formula-part denominator">
+                            <div class="number">4</div>
+                            <div class="label">total sections</div>
+                        </div>
+                        <div class="formula-symbol">=</div>
+                        <div class="formula-part" style="background: #e8f5e9; border-color: #4caf50;">
+                            <div class="number">1/4</div>
+                            <div class="label">25%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QUICK CHECK QUESTION -->
+                <div class="quick-check" id="check-spinner">
+                    <h3>✏️ Quick Check</h3>
+                    <p><strong>What's the probability of NOT landing on Yellow?</strong></p>
+                    <p style="font-size: 14px; color: #666;">(Hint: Count all sections that are NOT yellow)</p>
+                    <div class="quick-check-options">
+                        <div class="quick-check-option" onclick="checkQuickAnswer('spinner', 'a', this)">A) 1/4</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('spinner', 'b', this)">B) 2/4 = 1/2</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('spinner', 'c', this)">C) 3/4</div>
+                        <div class="quick-check-option" onclick="checkQuickAnswer('spinner', 'd', this)">D) 4/4 = 1</div>
+                    </div>
+                    <div class="quick-check-feedback correct" id="check-spinner-correct">
+                        <strong>✓ Correct!</strong> NOT yellow = Red, Blue, or Green. That's 3 out of 4. P(not yellow) = 3/4 = 75%
+                    </div>
+                    <div class="quick-check-feedback incorrect" id="check-spinner-incorrect">
+                        <strong>✗ Not quite.</strong> "Not yellow" means any of the OTHER colors: Red, Blue, Green. That's 3 sections. Try again!
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="understanding-check" id="faq-section-spinner" style="display: none;">
+                    <h3>🤔 Any Questions?</h3>
+                    <div class="faq-container">
+                        <button class="faq-btn" onclick="showFaqAnswer('spinner', 1)">
+                            <span class="faq-icon">❓</span>
+                            <span>What if sections aren't equal size?</span>
+                        </button>
+                        <button class="faq-btn" onclick="showFaqAnswer('spinner', 2)">
+                            <span class="faq-icon">❓</span>
+                            <span>How is 1/4 the same as 25%?</span>
+                        </button>
+                        <button class="faq-btn" onclick="showFaqAnswer('spinner', 3)">
+                            <span class="faq-icon">❓</span>
+                            <span>What if two sections are the same color?</span>
+                        </button>
+                        <button class="faq-btn help-btn" onclick="showSimpleExplanation('spinner')">
+                            <span class="faq-icon">🆘</span>
+                            <span>I need more help understanding this</span>
+                        </button>
+                        <button class="faq-btn continue-btn" onclick="nextSection()">
+                            <span>✓ I'm ready! Continue to practice</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- FAQ Answers -->
+                <div class="faq-answer" id="faq-spinner-1">
+                    <h4>❓ What if sections aren't equal size?</h4>
+                    <p>Bigger sections = higher probability. For now, we use <strong>equal sections</strong> which makes the math simpler!</p>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('spinner', 1)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="faq-answer" id="faq-spinner-2">
+                    <h4>❓ How is 1/4 the same as 25%?</h4>
+                    <div class="calculation">
+                        1/4 = 1 ÷ 4 = 0.25 = 25%
+                    </div>
+                    <p>Multiply decimal by 100 to get percent: 0.25 × 100 = 25%</p>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('spinner', 2)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="faq-answer" id="faq-spinner-3">
+                    <h4>❓ What if two sections are the same color?</h4>
+                    <p>Count BOTH! If 2 sections are red out of 4 total:</p>
+                    <div class="calculation">
+                        P(red) = 2/4 = 1/2 = 50%
+                    </div>
+                    <div class="close-faq">
+                        <button class="btn btn-secondary" onclick="hideFaqAnswer('spinner', 3)">Got it!</button>
+                    </div>
+                </div>
+
+                <div class="simple-explanation" id="simple-spinner">
+                    <h4>🆘 Think About It Like Pizza...</h4>
+                    <p style="font-size: 40px; text-align: center;">🍕 = 4 slices</p>
+                    <ul style="margin: 15px 20px;">
+                        <li>Each color is 1 slice out of 4</li>
+                        <li>Each has 1/4 = 25% chance</li>
+                        <li>Spin 4 times → expect each color once!</li>
+                    </ul>
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="nextSection()">Makes sense! Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 9: Practice 3 -->
+            <div class="section" id="section-practice3">
+                <div class="practice-box">
+                    <h3>Practice Problem 3</h3>
+                    <p style="font-size: 20px; margin: 20px 0;">
+                        What's the probability of landing on <strong>Red OR Blue</strong>?
+                    </p>
+                    <p style="text-align: center; color: #666;">(Hint: "OR" means count BOTH!)</p>
+
+                    <div class="options" id="practice3-options">
+                        <div class="option" onclick="checkAnswer('practice3', 'a', this)">A) 1/4</div>
+                        <div class="option" onclick="checkAnswer('practice3', 'b', this)">B) 2/4 = 1/2</div>
+                        <div class="option" onclick="checkAnswer('practice3', 'c', this)">C) 3/4</div>
+                        <div class="option" onclick="checkAnswer('practice3', 'd', this)">D) 4/4 = 1</div>
+                    </div>
+
+                    <div class="feedback correct" id="practice3-correct">
+                        <strong>🎉 Nice work!</strong>
+                        <p>Red OR Blue = 2 sections out of 4.</p>
+                        <p>P(Red or Blue) = 2/4 = <strong>1/2 = 50%</strong></p>
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="nextSection()">Continue to Summary</button>
+                        </div>
+                    </div>
+
+                    <div class="feedback incorrect" id="practice3-incorrect">
+                        <strong>Not quite.</strong>
+                        <p id="practice3-hint"></p>
+                        <p>"Red OR Blue" means count both colors as wins!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 10: Summary -->
+            <div class="section" id="section-summary">
+                <h2>Summary: What You've Learned!</h2>
+
+                <div class="milestone">
+                    <h3>🏆 Almost Done! 🏆</h3>
+                    <p>Let's review what you've learned!</p>
+                </div>
+
+                <ul class="summary-list">
+                    <li><strong>Probability</strong> = how likely something is to happen (0 to 1)</li>
+                    <li><strong>Formula:</strong> P = Favorable Outcomes ÷ Total Outcomes</li>
+                    <li><strong>Coin:</strong> P(heads) = 1/2 = 50%</li>
+                    <li><strong>Die:</strong> P(any number) = 1/6 ≈ 17%</li>
+                    <li><strong>4-Spinner:</strong> P(any color) = 1/4 = 25%</li>
+                    <li><strong>Multiple outcomes:</strong> Add up favorable outcomes!</li>
+                </ul>
+
+                <div class="visual-diagram">
+                    <h4>Quick Reference</h4>
+                    <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 15px;">
+                        <div style="text-align: center;">🪙<br><strong>Coin</strong><br>2 outcomes</div>
+                        <div style="text-align: center;">🎲<br><strong>Die</strong><br>6 outcomes</div>
+                        <div style="text-align: center;">🎯<br><strong>Spinner</strong><br>4 outcomes</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="nextSection()">I'm Ready for the Quiz!</button>
+                </div>
+            </div>
+
+            <!-- SECTION 11: Final Quiz -->
+            <div class="section" id="section-quiz">
+                <h2>📝 Final Quiz</h2>
+                <p>Answer all 5 questions, then click Submit!</p>
+
+                <div class="quiz-question">
+                    <p><span class="quiz-number">1</span> What does a probability of <strong>0</strong> mean?</p>
+                    <div class="options" id="q1-options">
+                        <div class="option" onclick="selectQuizAnswer(1, 'a', this)">A) Will definitely happen</div>
+                        <div class="option" onclick="selectQuizAnswer(1, 'b', this)">B) Impossible - can never happen</div>
+                        <div class="option" onclick="selectQuizAnswer(1, 'c', this)">C) 50% chance</div>
+                        <div class="option" onclick="selectQuizAnswer(1, 'd', this)">D) Likely to happen</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <p><span class="quiz-number">2</span> Bag has <strong>5 red + 3 blue marbles</strong>. P(red) = ?</p>
+                    <div class="options" id="q2-options">
+                        <div class="option" onclick="selectQuizAnswer(2, 'a', this)">A) 5/3</div>
+                        <div class="option" onclick="selectQuizAnswer(2, 'b', this)">B) 3/8</div>
+                        <div class="option" onclick="selectQuizAnswer(2, 'c', this)">C) 5/8</div>
+                        <div class="option" onclick="selectQuizAnswer(2, 'd', this)">D) 1/5</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <p><span class="quiz-number">3</span> P(rolling 1, 2, or 3) on a die = ?</p>
+                    <div class="options" id="q3-options">
+                        <div class="option" onclick="selectQuizAnswer(3, 'a', this)">A) 1/6</div>
+                        <div class="option" onclick="selectQuizAnswer(3, 'b', this)">B) 3/6 = 1/2</div>
+                        <div class="option" onclick="selectQuizAnswer(3, 'c', this)">C) 2/6 = 1/3</div>
+                        <div class="option" onclick="selectQuizAnswer(3, 'd', this)">D) 6/6 = 1</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <p><span class="quiz-number">4</span> Can probability be greater than 1?</p>
+                    <div class="options" id="q4-options">
+                        <div class="option" onclick="selectQuizAnswer(4, 'a', this)">A) Yes</div>
+                        <div class="option" onclick="selectQuizAnswer(4, 'b', this)">B) No - always between 0 and 1</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <p><span class="quiz-number">5</span> Jar has <strong>6 chocolate + 4 gummy candies</strong>. P(chocolate) = ?</p>
+                    <div class="options" id="q5-options">
+                        <div class="option" onclick="selectQuizAnswer(5, 'a', this)">A) 4/10 = 2/5</div>
+                        <div class="option" onclick="selectQuizAnswer(5, 'b', this)">B) 6/4</div>
+                        <div class="option" onclick="selectQuizAnswer(5, 'c', this)">C) 6/10 = 3/5</div>
+                        <div class="option" onclick="selectQuizAnswer(5, 'd', this)">D) 10/6</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="submitQuiz()">Submit Quiz</button>
+                </div>
+            </div>
+
+            <!-- SECTION 12: Results -->
+            <div class="section" id="section-results">
+                <div class="results-box">
+                    <div class="celebration">🎉🏆🎉</div>
+                    <h1>Lesson Complete!</h1>
+
+                    <div class="score-circle" id="score-display">0/5</div>
+
+                    <div id="results-message"></div>
+                    <div id="quiz-review" style="text-align: left; margin-top: 30px;"></div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="restartLesson()">Start Over</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sections = [
+            'section-welcome', 'section-intro', 'section-formula', 'section-coin',
+            'section-practice1', 'section-dice', 'section-practice2', 'section-spinner',
+            'section-practice3', 'section-summary', 'section-quiz', 'section-results'
+        ];
+
+        let currentSection = 0;
+        let flipCount = 0, headsCount = 0;
+
+        // Quick check answers
+        const quickCheckAnswers = {
+            intro: 'c',
+            formula: 'b',
+            coin: 'b',
+            dice: 'c',
+            spinner: 'c'
+        };
+
+        // Practice answers
+        const answers = {
+            practice1: 'b',
+            practice2: 'c',
+            practice3: 'b'
+        };
+
+        const hints = {
+            practice1: { a: "A coin has 2 sides, not 4!", c: "A coin has 2 sides, not 3!", d: "2/2 = 100% means it ALWAYS happens" },
+            practice2: { a: "That's 4 numbers - count only 5 and 6", b: "That's only 1 number", d: "That's 3 numbers, not 2" },
+            practice3: { a: "That's only 1 color", c: "That's 3 colors", d: "That's all 4 colors" }
+        };
+
+        const quizAnswers = { 1: 'b', 2: 'c', 3: 'b', 4: 'b', 5: 'c' };
+        const quizExplanations = {
+            1: "0 = impossible",
+            2: "5 red ÷ 8 total = 5/8",
+            3: "3 numbers ÷ 6 total = 1/2",
+            4: "Probability is always 0 to 1",
+            5: "6 chocolate ÷ 10 total = 3/5"
+        };
+
+        let quizSelections = {};
+
+        function updateProgress() {
+            const progress = (currentSection / (sections.length - 1)) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '% Complete';
+        }
+
+        function showSection(index) {
+            sections.forEach((id, i) => {
+                document.getElementById(id).classList.toggle('active', i === index);
+            });
+            currentSection = index;
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextSection() {
+            if (currentSection < sections.length - 1) showSection(currentSection + 1);
+        }
+
+        function checkQuickAnswer(topic, answer, element) {
+            const correct = quickCheckAnswers[topic];
+            const allOptions = element.parentElement.querySelectorAll('.quick-check-option');
+
+            if (answer === correct) {
+                allOptions.forEach(opt => opt.classList.add('disabled'));
+                element.classList.add('correct');
+                document.getElementById(`check-${topic}-correct`).classList.add('show');
+                document.getElementById(`check-${topic}-incorrect`).classList.remove('show');
+                // Show FAQ section
+                document.getElementById(`faq-section-${topic}`).style.display = 'block';
+            } else {
+                element.classList.add('incorrect');
+                document.getElementById(`check-${topic}-incorrect`).classList.add('show');
+                setTimeout(() => element.classList.remove('incorrect'), 1500);
+            }
+        }
+
+        function showFaqAnswer(topic, num) {
+            for (let i = 1; i <= 3; i++) {
+                const el = document.getElementById(`faq-${topic}-${i}`);
+                if (el) el.classList.remove('show');
+            }
+            const simple = document.getElementById(`simple-${topic}`);
+            if (simple) simple.classList.remove('show');
+
+            const el = document.getElementById(`faq-${topic}-${num}`);
+            if (el) {
+                el.classList.add('show');
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function hideFaqAnswer(topic, num) {
+            const el = document.getElementById(`faq-${topic}-${num}`);
+            if (el) el.classList.remove('show');
+        }
+
+        function showSimpleExplanation(topic) {
+            document.querySelectorAll('.faq-answer').forEach(f => f.classList.remove('show'));
+            const el = document.getElementById(`simple-${topic}`);
+            if (el) {
+                el.classList.add('show');
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function flipCoin() {
+            const coin = document.getElementById('interactive-coin');
+            coin.classList.add('flipping');
+            setTimeout(() => {
+                coin.classList.remove('flipping');
+                const isHeads = Math.random() < 0.5;
+                flipCount++;
+                if (isHeads) headsCount++;
+                coin.textContent = isHeads ? 'HEADS' : 'TAILS';
+                coin.style.background = isHeads ? 'linear-gradient(145deg, #ffd700, #ffb300)' : 'linear-gradient(145deg, #c0c0c0, #a0a0a0)';
+                document.getElementById('flip-result').textContent = isHeads ? '👑 HEADS!' : '🦅 TAILS!';
+                document.getElementById('flip-stats').textContent = `Flips: ${flipCount} | Heads: ${headsCount} (${Math.round(headsCount/flipCount*100)}%)`;
+            }, 600);
+        }
+
+        function checkAnswer(practice, answer, element) {
+            const correct = answers[practice];
+            const allOptions = document.querySelectorAll(`#${practice}-options .option`);
+
+            if (answer === correct) {
+                allOptions.forEach(opt => opt.classList.add('disabled'));
+                element.classList.add('correct');
+                document.getElementById(`${practice}-correct`).classList.add('show');
+                document.getElementById(`${practice}-incorrect`).classList.remove('show');
+            } else {
+                element.classList.add('incorrect');
+                document.getElementById(`${practice}-hint`).textContent = hints[practice][answer];
+                document.getElementById(`${practice}-incorrect`).classList.add('show');
+                setTimeout(() => element.classList.remove('incorrect'), 1500);
+            }
+        }
+
+        function selectQuizAnswer(q, answer, element) {
+            document.querySelectorAll(`#q${q}-options .option`).forEach(o => o.classList.remove('selected'));
+            element.classList.add('selected');
+            quizSelections[q] = answer;
+        }
+
+        function submitQuiz() {
+            if (Object.keys(quizSelections).length < 5) {
+                alert('Please answer all 5 questions!');
+                return;
+            }
+
+            let score = 0;
+            for (let q = 1; q <= 5; q++) {
+                if (quizSelections[q] === quizAnswers[q]) score++;
+            }
+
+            showSection(sections.length - 1);
+            document.getElementById('score-display').textContent = score + '/5';
+
+            let msg = score === 5 ? '<h2 style="color:#4caf50">🌟 Perfect! 🌟</h2>' :
+                      score >= 4 ? '<h2 style="color:#4caf50">🎉 Excellent!</h2>' :
+                      score >= 3 ? '<h2 style="color:#ff9800">👍 Good Job!</h2>' :
+                      '<h2 style="color:#2196f3">💪 Keep Practicing!</h2>';
+            document.getElementById('results-message').innerHTML = msg;
+
+            let review = '<h3>Review:</h3>';
+            for (let q = 1; q <= 5; q++) {
+                const ok = quizSelections[q] === quizAnswers[q];
+                review += `<div style="padding:10px;margin:5px 0;background:${ok?'#e8f5e9':'#ffebee'};border-radius:8px;">
+                    <strong style="color:${ok?'#4caf50':'#f44336'}">${ok?'✓':'✗'} Q${q}:</strong> ${quizExplanations[q]}</div>`;
+            }
+            document.getElementById('quiz-review').innerHTML = review;
+        }
+
+        function restartLesson() {
+            currentSection = 0;
+            quizSelections = {};
+            flipCount = headsCount = 0;
+
+            document.querySelectorAll('.option, .quick-check-option').forEach(o => {
+                o.classList.remove('selected', 'correct', 'incorrect', 'disabled');
+            });
+            document.querySelectorAll('.feedback, .quick-check-feedback, .faq-answer, .simple-explanation').forEach(f => {
+                f.classList.remove('show');
+            });
+            document.querySelectorAll('[id^="faq-section-"]').forEach(f => f.style.display = 'none');
+
+            const coin = document.getElementById('interactive-coin');
+            if (coin) { coin.textContent = 'HEADS'; coin.style.background = 'linear-gradient(145deg, #ffd700, #ffb300)'; }
+            document.getElementById('flip-result').textContent = '';
+            document.getElementById('flip-stats').textContent = '';
+
+            showSection(0);
+        }
+
+        updateProgress();
+    </script>
+</body>
+</html>

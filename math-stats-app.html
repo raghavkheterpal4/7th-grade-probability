@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Stats Adventure!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .stat-icon { font-size: 1.5em; }
+
+        .streak-fire { animation: flame 0.5s ease infinite alternate; }
+
+        @keyframes flame {
+            from { transform: scale(1) rotate(-5deg); }
+            to { transform: scale(1.2) rotate(5deg); }
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+        }
+
+        /* Main Menu */
+        #main-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .topic-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255,255,255,0.5);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .topic-card.mean { border-top: 4px solid #ff6b6b; }
+        .topic-card.median { border-top: 4px solid #4ecdc4; }
+        .topic-card.mode { border-top: 4px solid #ffe66d; }
+        .topic-card.range { border-top: 4px solid #a29bfe; }
+
+        .topic-icon { font-size: 3.5em; margin-bottom: 10px; display: block; }
+        .topic-title { font-size: 1.5em; font-weight: bold; color: white; margin-bottom: 5px; }
+        .topic-subtitle { color: rgba(255,255,255,0.6); font-size: 0.9em; }
+
+        .level-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: gold;
+            color: #333;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        /* Sections */
+        .section { display: none; animation: fadeIn 0.5s ease; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .section-title {
+            font-size: 1.8em;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Mode Tabs */
+        .mode-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .mode-tab {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.2);
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .mode-tab:hover { background: rgba(255,255,255,0.2); }
+        .mode-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: transparent;
+        }
+
+        .game-wrapper {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .lesson-container { max-width: 750px; margin: 0 auto; }
+
+        /* Teacher */
+        .teacher-box {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .teacher-avatar {
+            font-size: 3.5em;
+            flex-shrink: 0;
+            animation: teacherBounce 2s ease infinite;
+        }
+
+        @keyframes teacherBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .teacher-speech {
+            background: white;
+            border-radius: 20px;
+            border-top-left-radius: 5px;
+            padding: 20px 25px;
+            color: #333;
+            font-size: 1.15em;
+            line-height: 1.6;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .teacher-speech::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 15px;
+            border: 10px solid transparent;
+            border-right-color: white;
+        }
+
+        .speech-highlight {
+            background: linear-gradient(135deg, #ffe66d, #ffd93d);
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        /* Help Button */
+        .help-btn {
+            background: rgba(255,107,107,0.2);
+            color: #ff6b6b;
+            border: 2px solid #ff6b6b;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .help-btn:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        /* Highlighted/Explained State */
+        .explainable {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .explainable.highlighted {
+            outline: 4px solid #ffe66d;
+            outline-offset: 5px;
+            border-radius: 10px;
+            animation: pulseHighlight 1.5s ease infinite;
+        }
+
+        @keyframes pulseHighlight {
+            0%, 100% { outline-color: #ffe66d; box-shadow: 0 0 20px rgba(255,230,109,0.5); }
+            50% { outline-color: #ffd93d; box-shadow: 0 0 40px rgba(255,230,109,0.8); }
+        }
+
+        .explain-popup {
+            position: absolute;
+            bottom: calc(100% + 15px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 1em;
+            min-width: 250px;
+            max-width: 350px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: popIn 0.3s ease;
+        }
+
+        .explain-popup::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 10px solid transparent;
+            border-top-color: #764ba2;
+        }
+
+        .explain-popup .close-explain {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .explain-popup .close-explain:hover { opacity: 1; }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* Visual Scenario Box */
+        .scenario-box {
+            background: linear-gradient(135deg, #2d3436, #1e272e);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .scenario-title {
+            color: #ffe66d;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .scenario-visual {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 15px;
+            flex-wrap: wrap;
+            min-height: 120px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Cookie Visual */
+        .person-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .person-icon { font-size: 2.5em; }
+        .person-label { color: white; font-size: 0.9em; }
+
+        .item-row {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 80px;
+        }
+
+        .item-icon {
+            font-size: 1.3em;
+            transition: all 0.3s ease;
+        }
+
+        .item-icon.moving {
+            animation: itemMove 0.5s ease;
+        }
+
+        @keyframes itemMove {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Height line visual */
+        .people-line {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .person-height {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.5s ease;
+        }
+
+        .person-height .person-body {
+            font-size: 2em;
+            transition: all 0.3s ease;
+        }
+
+        .person-height .height-label {
+            color: white;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .person-height.highlighted-person .person-body {
+            transform: scale(1.3);
+            filter: drop-shadow(0 0 10px #ffe66d);
+        }
+
+        /* Voting visual */
+        .vote-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .vote-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .vote-icon { font-size: 3em; margin-bottom: 10px; }
+
+        .vote-hands {
+            display: flex;
+            gap: 2px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 100px;
+        }
+
+        .hand { font-size: 1.2em; }
+
+        .vote-count {
+            color: white;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .vote-option.winner {
+            transform: scale(1.1);
+        }
+
+        .vote-option.winner .vote-icon {
+            animation: bounce 0.5s ease infinite;
+        }
+
+        /* Temperature visual */
+        .thermometer-row {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .day-temp {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .thermometer {
+            width: 30px;
+            background: linear-gradient(to top, #ff6b6b, #ffe66d, #4ecdc4);
+            border-radius: 15px;
+            position: relative;
+            transition: height 0.5s ease;
+        }
+
+        .thermometer::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #ff6b6b;
+            border-radius: 50%;
+        }
+
+        .temp-label {
+            color: white;
+            font-weight: bold;
+            margin-top: 25px;
+        }
+
+        .day-label {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        /* Step Box */
+        .step-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .step-title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-num {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .step-title {
+            color: #ffe66d;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .step-content {
+            color: white;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .calc-display {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 15px 25px;
+            color: #ffe66d;
+            font-size: 1.4em;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+
+        /* Result reveal */
+        .result-reveal {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .result-reveal.show { transform: scale(1); }
+        .result-label { color: rgba(255,255,255,0.8); font-size: 1em; margin-bottom: 5px; }
+        .result-value { color: white; font-size: 2.5em; font-weight: bold; }
+        .result-meaning { color: rgba(255,255,255,0.9); margin-top: 8px; font-size: 1.1em; }
+
+        /* Try It */
+        .try-it-box {
+            background: linear-gradient(135deg, rgba(255,107,107,0.2), rgba(238,90,36,0.1));
+            border: 2px dashed #ff6b6b;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .try-it-title {
+            color: #ff6b6b;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .mini-input {
+            width: 100px;
+            padding: 12px;
+            font-size: 1.5em;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            outline: none;
+            margin: 0 10px;
+        }
+
+        .mini-input:focus { border-color: #ff6b6b; }
+
+        .check-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .check-btn:hover { transform: scale(1.05); background: #ee5a24; }
+
+        .feedback-inline {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .feedback-inline.correct { background: rgba(78,205,196,0.3); color: #4ecdc4; }
+        .feedback-inline.incorrect { background: rgba(255,107,107,0.3); color: #ff6b6b; }
+
+        /* Continue Button */
+        .continue-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 30px auto 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.3em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102,126,234,0.5);
+        }
+
+        /* Progress dots */
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dot.completed { background: #4ecdc4; box-shadow: 0 0 10px #4ecdc4; }
+        .dot.current { background: #ffe66d; box-shadow: 0 0 10px #ffe66d; animation: pulse 1s ease infinite; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* Practice styles */
+        .practice-instruction {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: white;
+            font-size: 1.1em;
+        }
+
+        .step-row {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content-practice { flex: 1; color: white; }
+        .step-label { font-size: 0.85em; color: rgba(255,255,255,0.6); margin-bottom: 5px; }
+        .step-value { font-size: 1.4em; font-weight: bold; color: #ffe66d; }
+
+        .numbers-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+
+        .num-bubble {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: white;
+            background: #667eea;
+            transition: all 0.5s ease;
+        }
+
+        .num-bubble.highlight {
+            background: #ffe66d;
+            color: #333;
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255,230,109,0.6);
+        }
+
+        .num-bubble.sorted { background: #4ecdc4; }
+        .num-bubble.small { width: 45px; height: 45px; font-size: 1.1em; }
+
+        .answer-section {
+            background: linear-gradient(135deg, rgba(255,230,109,0.1), rgba(255,200,50,0.05));
+            border: 2px dashed #ffe66d;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .answer-prompt { color: #ffe66d; font-size: 1.3em; font-weight: bold; margin-bottom: 15px; }
+
+        .answer-input {
+            width: 120px;
+            padding: 15px;
+            font-size: 1.8em;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 15px;
+            text-align: center;
+            background: rgba(0,0,0,0.4);
+            color: white;
+            outline: none;
+        }
+
+        .answer-input:focus { border-color: #ffe66d; box-shadow: 0 0 20px rgba(255,230,109,0.4); }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 15px 45px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-left: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover { transform: scale(1.05); }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 8px; color: white; font-size: 0.95em; }
+        .legend-dot { width: 16px; height: 16px; border-radius: 50%; }
+        .legend-dot.green { background: #4ecdc4; }
+        .legend-dot.yellow { background: #ffe66d; }
+        .legend-dot.red { background: #ff6b6b; }
+
+        /* Bar Chart */
+        .bar-chart {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 20px;
+            min-height: 150px;
+        }
+
+        .bar-column { display: flex; flex-direction: column; align-items: center; }
+
+        .bar-stack {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 4px;
+        }
+
+        .bar-block {
+            width: 45px;
+            height: 30px;
+            background: #667eea;
+            border-radius: 6px;
+        }
+
+        .bar-block.winner {
+            background: #ff6b6b;
+            box-shadow: 0 0 10px rgba(255,107,107,0.5);
+        }
+
+        .bar-label { color: white; font-weight: bold; font-size: 1.2em; margin-top: 8px; }
+        .bar-count { color: rgba(255,255,255,0.6); font-size: 0.9em; }
+
+        /* Effects */
+        .feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            z-index: 1000;
+            animation: popIn 0.5s ease;
+            pointer-events: none;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            animation: confettiFall 3s ease-out forwards;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .floating-xp {
+            position: fixed;
+            color: #4ecdc4;
+            font-size: 1.8em;
+            font-weight: bold;
+            pointer-events: none;
+            animation: floatUp 1s ease forwards;
+            z-index: 1000;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-60px); }
+        }
+
+        .combo-display {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            padding: 12px 24px;
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3em;
+            display: none;
+            z-index: 500;
+        }
+
+        .combo-display.active { display: block; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 25px;
+            padding: 45px;
+            text-align: center;
+            color: white;
+            animation: modalPop 0.5s ease;
+            max-width: 400px;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0) rotate(-10deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .modal-icon { font-size: 5em; margin-bottom: 15px; }
+        .modal-title { font-size: 2.2em; margin-bottom: 10px; }
+        .modal-message { font-size: 1.2em; opacity: 0.9; }
+
+        .modal-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 45px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+        }
+
+        .modal-btn:hover { transform: scale(1.05); }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            #main-menu { grid-template-columns: 1fr; }
+            h1 { font-size: 1.6em; }
+            .teacher-box { flex-direction: column; align-items: center; text-align: center; }
+            .teacher-speech::before { display: none; }
+            .teacher-speech { border-radius: 20px; }
+            .num-bubble { width: 45px; height: 45px; font-size: 1.2em; }
+            .explain-popup { min-width: 200px; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <div class="stat-box"><span class="stat-icon">⭐</span><span id="total-stars">0</span></div>
+            <div class="stat-box"><span class="stat-icon">🪙</span><span id="total-coins">0</span></div>
+            <div class="stat-box"><span class="stat-icon streak-fire" id="streak-icon">🔥</span><span id="streak-count">0</span></div>
+        </div>
+
+        <h1>Math Stats Adventure!</h1>
+
+        <div class="combo-display" id="combo-display">🔥 <span id="combo-text">2x COMBO!</span></div>
+
+        <!-- Main Menu -->
+        <div id="main-menu">
+            <div class="topic-card mean" onclick="startTopic('mean')">
+                <span class="level-badge" id="mean-level">Lv 1</span>
+                <span class="topic-icon">🍪</span>
+                <div class="topic-title">Mean</div>
+                <div class="topic-subtitle">Share Equally</div>
+            </div>
+            <div class="topic-card median" onclick="startTopic('median')">
+                <span class="level-badge" id="median-level">Lv 1</span>
+                <span class="topic-icon">📏</span>
+                <div class="topic-title">Median</div>
+                <div class="topic-subtitle">Find the Middle</div>
+            </div>
+            <div class="topic-card mode" onclick="startTopic('mode')">
+                <span class="level-badge" id="mode-level">Lv 1</span>
+                <span class="topic-icon">🗳️</span>
+                <div class="topic-title">Mode</div>
+                <div class="topic-subtitle">Most Popular</div>
+            </div>
+            <div class="topic-card range" onclick="startTopic('range')">
+                <span class="level-badge" id="range-level">Lv 1</span>
+                <span class="topic-icon">🌡️</span>
+                <div class="topic-title">Range</div>
+                <div class="topic-subtitle">The Difference</div>
+            </div>
+        </div>
+
+        <!-- Topic Section -->
+        <div id="topic-section" class="section">
+            <button class="back-btn" onclick="goHome()">← Back</button>
+            <div class="section-title" id="topic-title">🍪 Mean</div>
+
+            <div class="mode-tabs">
+                <button class="mode-tab active" id="tab-learn" onclick="switchMode('learn')">📖 Learn</button>
+                <button class="mode-tab" id="tab-practice" onclick="switchMode('practice')">✏️ Practice</button>
+            </div>
+
+            <div class="game-wrapper">
+                <div id="learn-mode">
+                    <div class="lesson-container" id="lesson-content"></div>
+                </div>
+
+                <div id="practice-mode" class="hidden">
+                    <div class="progress-dots" id="practice-dots"></div>
+                    <div id="practice-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal" id="level-modal">
+            <div class="modal-content">
+                <div class="modal-icon" id="modal-icon">🎉</div>
+                <div class="modal-title" id="modal-title">LEVEL UP!</div>
+                <p class="modal-message" id="modal-message">You reached Level 2!</p>
+                <button class="modal-btn" onclick="closeModal()">Continue!</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let state = {
+            coins: 0, stars: 0, streak: 0,
+            levels: { mean: 1, median: 1, mode: 1, range: 1 },
+            xp: { mean: 0, median: 0, mode: 0, range: 0 },
+            currentTopic: null, currentMode: 'learn', lessonStep: 0,
+            currentProblem: 0, currentAnswer: null, currentNumbers: [],
+            activeExplain: null
+        };
+
+        const XP_PER_LEVEL = 100;
+        const PROBLEMS_PER_ROUND = 5;
+
+        // Visual lessons with real-world scenarios
+        const lessons = {
+            mean: {
+                icon: '🍪',
+                title: 'Mean',
+                steps: [
+                    {
+                        type: 'intro',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">
+                                    Let's learn about the <span class="speech-highlight">MEAN</span>!
+                                    <br><br>
+                                    Another word for it is <span class="speech-highlight">AVERAGE</span>.
+                                    <br><br>
+                                    It helps answer: <b>"If we shared equally, how much would each person get?"</b>
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'scenario',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">
+                                    Imagine 4 friends have different amounts of cookies. Let's share them equally!
+                                </div>
+                            </div>
+                            <div class="scenario-box explainable" data-explain="This shows 4 friends with their cookies. Emma has 2, Jake has 6, Mia has 4, and Leo has 4. We want to share ALL cookies so everyone gets the same amount.">
+                                <div class="scenario-title">🍪 Cookie Sharing Time!</div>
+                                <div class="scenario-visual" id="cookie-visual">
+                                    <div class="person-stack">
+                                        <div class="item-row">🍪🍪</div>
+                                        <div class="person-icon">👧</div>
+                                        <div class="person-label">Emma: 2</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div class="item-row">🍪🍪🍪🍪🍪🍪</div>
+                                        <div class="person-icon">👦</div>
+                                        <div class="person-label">Jake: 6</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div class="item-row">🍪🍪🍪🍪</div>
+                                        <div class="person-icon">👧</div>
+                                        <div class="person-label">Mia: 4</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div class="item-row">🍪🍪🍪🍪</div>
+                                        <div class="person-icon">👦</div>
+                                        <div class="person-label">Leo: 4</div>
+                                    </div>
+                                </div>
+                                <button class="help-btn" onclick="toggleExplain(this.parentElement)">❓ I don't understand this</button>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'step1',
+                        content: `
+                            <div class="step-box explainable" data-explain="We're putting ALL the cookies from ALL 4 friends into one big pile. 2 + 6 + 4 + 4 = 16 cookies total. This is the TOTAL we have to share.">
+                                <div class="step-header">
+                                    <div class="step-title-row">
+                                        <div class="step-num">1</div>
+                                        <div class="step-title">Put all cookies in one pile</div>
+                                    </div>
+                                    <button class="help-btn" onclick="toggleExplain(this.closest('.explainable'))">❓ Help</button>
+                                </div>
+                                <div class="scenario-visual">
+                                    <div style="font-size: 2em;">🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪🍪</div>
+                                </div>
+                                <div class="calc-display">2 + 6 + 4 + 4 = 16 cookies total</div>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'step2',
+                        content: `
+                            <div class="step-box explainable" data-explain="We have 4 friends who want to share. So we divide the 16 cookies by 4 people. Think of it as dealing cards - give 1 to each person until they're all gone!">
+                                <div class="step-header">
+                                    <div class="step-title-row">
+                                        <div class="step-num">2</div>
+                                        <div class="step-title">Share equally among 4 friends</div>
+                                    </div>
+                                    <button class="help-btn" onclick="toggleExplain(this.closest('.explainable'))">❓ Help</button>
+                                </div>
+                                <div class="calc-display">16 cookies ÷ 4 friends = ?</div>
+                                <div class="scenario-visual">
+                                    <div class="person-stack">
+                                        <div class="item-row">🍪🍪🍪🍪</div>
+                                        <div class="person-icon">👧</div>
+                                        <div class="person-label">Emma</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div class="item-row">🍪🍪🍪🍪</div>
+                                        <div class="person-icon">👦</div>
+                                        <div class="person-label">Jake</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div class="item-row">🍪🍪🍪🍪</div>
+                                        <div class="person-icon">👧</div>
+                                        <div class="person-label">Mia</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div class="item-row">🍪🍪🍪🍪</div>
+                                        <div class="person-icon">👦</div>
+                                        <div class="person-label">Leo</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="result-reveal">
+                                <div class="result-label">THE MEAN IS</div>
+                                <div class="result-value">4</div>
+                                <div class="result-meaning">Each friend gets 4 cookies when shared equally!</div>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'tryit',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">Your turn! 3 kids collected seashells at the beach:</div>
+                            </div>
+                            <div class="scenario-box explainable" data-explain="Ana found 3 shells, Ben found 6 shells, and Cara found 9 shells. To find the mean: add them all (3+6+9=18), then divide by 3 kids (18÷3=6).">
+                                <div class="scenario-title">🐚 Seashell Collection</div>
+                                <div class="scenario-visual">
+                                    <div class="person-stack">
+                                        <div class="item-row">🐚🐚🐚</div>
+                                        <div class="person-icon">👧</div>
+                                        <div class="person-label">Ana: 3</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div class="item-row">🐚🐚🐚🐚🐚🐚</div>
+                                        <div class="person-icon">👦</div>
+                                        <div class="person-label">Ben: 6</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div class="item-row">🐚🐚🐚🐚🐚🐚🐚🐚🐚</div>
+                                        <div class="person-icon">👧</div>
+                                        <div class="person-label">Cara: 9</div>
+                                    </div>
+                                </div>
+                                <button class="help-btn" onclick="toggleExplain(this.parentElement)">❓ I need a hint</button>
+                            </div>
+                            <div class="try-it-box">
+                                <div class="try-it-title">If shared equally, how many shells would each kid get?</div>
+                                <input type="number" class="mini-input" id="tryit-input" placeholder="?">
+                                <button class="check-btn" onclick="checkTryIt(6)">Check</button>
+                                <div id="tryit-feedback" class="feedback-inline" style="display: none;"></div>
+                            </div>
+                        `,
+                        answer: 6
+                    }
+                ]
+            },
+            median: {
+                icon: '📏',
+                title: 'Median',
+                steps: [
+                    {
+                        type: 'intro',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">
+                                    Let's learn about the <span class="speech-highlight">MEDIAN</span>!
+                                    <br><br>
+                                    The median is the <span class="speech-highlight">MIDDLE VALUE</span> when things are lined up in order.
+                                    <br><br>
+                                    Think of it as: <b>"Who's standing right in the center?"</b>
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'scenario',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">
+                                    5 kids are lining up by height for a photo. Let's find who's in the middle!
+                                </div>
+                            </div>
+                            <div class="scenario-box explainable" data-explain="These 5 kids are standing randomly. Their heights are: 140cm, 125cm, 155cm, 130cm, and 145cm. We need to sort them from shortest to tallest to find the middle person.">
+                                <div class="scenario-title">📸 Class Photo Line-Up (Unsorted)</div>
+                                <div class="people-line" id="height-visual">
+                                    <div class="person-height" style="height: 140px;">
+                                        <div class="person-body">🧍</div>
+                                        <div class="height-label">140cm</div>
+                                    </div>
+                                    <div class="person-height" style="height: 100px;">
+                                        <div class="person-body">🧒</div>
+                                        <div class="height-label">125cm</div>
+                                    </div>
+                                    <div class="person-height" style="height: 170px;">
+                                        <div class="person-body">🧑</div>
+                                        <div class="height-label">155cm</div>
+                                    </div>
+                                    <div class="person-height" style="height: 115px;">
+                                        <div class="person-body">🧒</div>
+                                        <div class="height-label">130cm</div>
+                                    </div>
+                                    <div class="person-height" style="height: 155px;">
+                                        <div class="person-body">🧍</div>
+                                        <div class="height-label">145cm</div>
+                                    </div>
+                                </div>
+                                <button class="help-btn" onclick="toggleExplain(this.parentElement)">❓ I don't understand this</button>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'step1',
+                        content: `
+                            <div class="step-box explainable" data-explain="We rearranged everyone from shortest (125cm) to tallest (155cm). Now they're in order: 125, 130, 140, 145, 155. This is important because the median needs things in ORDER first!">
+                                <div class="step-header">
+                                    <div class="step-title-row">
+                                        <div class="step-num">1</div>
+                                        <div class="step-title">Line up shortest to tallest</div>
+                                    </div>
+                                    <button class="help-btn" onclick="toggleExplain(this.closest('.explainable'))">❓ Help</button>
+                                </div>
+                                <div class="people-line">
+                                    <div class="person-height" style="height: 100px;">
+                                        <div class="person-body">🧒</div>
+                                        <div class="height-label">125cm</div>
+                                    </div>
+                                    <div class="person-height" style="height: 115px;">
+                                        <div class="person-body">🧒</div>
+                                        <div class="height-label">130cm</div>
+                                    </div>
+                                    <div class="person-height highlighted-person" style="height: 140px;">
+                                        <div class="person-body">🧍</div>
+                                        <div class="height-label" style="color: #ffe66d; font-weight: bold;">140cm</div>
+                                    </div>
+                                    <div class="person-height" style="height: 155px;">
+                                        <div class="person-body">🧍</div>
+                                        <div class="height-label">145cm</div>
+                                    </div>
+                                    <div class="person-height" style="height: 170px;">
+                                        <div class="person-body">🧑</div>
+                                        <div class="height-label">155cm</div>
+                                    </div>
+                                </div>
+                                <div style="text-align: center; color: #ffe66d; font-size: 1.2em; margin-top: 10px;">
+                                    ↑ The person in the MIDDLE ↑
+                                </div>
+                            </div>
+                            <div class="result-reveal">
+                                <div class="result-label">THE MEDIAN HEIGHT IS</div>
+                                <div class="result-value">140cm</div>
+                                <div class="result-meaning">The middle kid is 140cm tall!</div>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'tryit',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">Your turn! 5 students got these quiz scores. Find the median!</div>
+                            </div>
+                            <div class="scenario-box explainable" data-explain="First sort the scores: 70, 75, 85, 90, 95. Since there are 5 scores, the middle one (3rd) is the median. Count: 1st=70, 2nd=75, 3rd=85 ← that's the median!">
+                                <div class="scenario-title">📝 Quiz Scores</div>
+                                <div class="scenario-visual">
+                                    <div class="person-stack">
+                                        <div style="font-size: 2em;">📄</div>
+                                        <div class="person-label" style="font-size: 1.3em; color: #ffe66d;">85</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div style="font-size: 2em;">📄</div>
+                                        <div class="person-label" style="font-size: 1.3em; color: #ffe66d;">70</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div style="font-size: 2em;">📄</div>
+                                        <div class="person-label" style="font-size: 1.3em; color: #ffe66d;">95</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div style="font-size: 2em;">📄</div>
+                                        <div class="person-label" style="font-size: 1.3em; color: #ffe66d;">75</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div style="font-size: 2em;">📄</div>
+                                        <div class="person-label" style="font-size: 1.3em; color: #ffe66d;">90</div>
+                                    </div>
+                                </div>
+                                <button class="help-btn" onclick="toggleExplain(this.parentElement)">❓ I need a hint</button>
+                            </div>
+                            <div class="try-it-box">
+                                <div class="try-it-title">What's the median score?</div>
+                                <input type="number" class="mini-input" id="tryit-input" placeholder="?">
+                                <button class="check-btn" onclick="checkTryIt(85)">Check</button>
+                                <div id="tryit-feedback" class="feedback-inline" style="display: none;"></div>
+                            </div>
+                        `,
+                        answer: 85
+                    }
+                ]
+            },
+            mode: {
+                icon: '🗳️',
+                title: 'Mode',
+                steps: [
+                    {
+                        type: 'intro',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">
+                                    Let's learn about the <span class="speech-highlight">MODE</span>!
+                                    <br><br>
+                                    The mode is the value that appears <span class="speech-highlight">MOST OFTEN</span>.
+                                    <br><br>
+                                    Think of it as: <b>"What's the most popular choice?"</b>
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'scenario',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">
+                                    A class voted for their favorite pizza topping. Let's see which won!
+                                </div>
+                            </div>
+                            <div class="scenario-box explainable" data-explain="Each raised hand ✋ represents one vote. Count the hands under each topping to see how many votes it got. The topping with the MOST hands wins — that's the mode!">
+                                <div class="scenario-title">🍕 Pizza Topping Vote!</div>
+                                <div class="vote-container" id="vote-visual">
+                                    <div class="vote-option">
+                                        <div class="vote-icon">🧀</div>
+                                        <div class="vote-hands">✋✋✋</div>
+                                        <div class="vote-count">Cheese: 3</div>
+                                    </div>
+                                    <div class="vote-option winner">
+                                        <div class="vote-icon">🍖</div>
+                                        <div class="vote-hands">✋✋✋✋✋✋</div>
+                                        <div class="vote-count" style="color: #ff6b6b; font-size: 1.2em;">Pepperoni: 6</div>
+                                    </div>
+                                    <div class="vote-option">
+                                        <div class="vote-icon">🍄</div>
+                                        <div class="vote-hands">✋✋</div>
+                                        <div class="vote-count">Mushroom: 2</div>
+                                    </div>
+                                    <div class="vote-option">
+                                        <div class="vote-icon">🫑</div>
+                                        <div class="vote-hands">✋✋✋</div>
+                                        <div class="vote-count">Peppers: 3</div>
+                                    </div>
+                                </div>
+                                <button class="help-btn" onclick="toggleExplain(this.parentElement)">❓ I don't understand this</button>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'step1',
+                        content: `
+                            <div class="step-box explainable" data-explain="The bar chart makes it easy to see! Taller bar = more votes. Pepperoni has the tallest bar with 6 votes. That makes it the MODE because it's the most popular choice!">
+                                <div class="step-header">
+                                    <div class="step-title-row">
+                                        <div class="step-num">1</div>
+                                        <div class="step-title">Count the votes</div>
+                                    </div>
+                                    <button class="help-btn" onclick="toggleExplain(this.closest('.explainable'))">❓ Help</button>
+                                </div>
+                                <div class="bar-chart">
+                                    <div class="bar-column">
+                                        <div class="bar-stack">
+                                            <div class="bar-block"></div>
+                                            <div class="bar-block"></div>
+                                            <div class="bar-block"></div>
+                                        </div>
+                                        <div class="bar-label">🧀</div>
+                                        <div class="bar-count">3 votes</div>
+                                    </div>
+                                    <div class="bar-column">
+                                        <div class="bar-stack">
+                                            <div class="bar-block winner"></div>
+                                            <div class="bar-block winner"></div>
+                                            <div class="bar-block winner"></div>
+                                            <div class="bar-block winner"></div>
+                                            <div class="bar-block winner"></div>
+                                            <div class="bar-block winner"></div>
+                                        </div>
+                                        <div class="bar-label">🍖</div>
+                                        <div class="bar-count" style="color: #ff6b6b;">6 votes ⭐</div>
+                                    </div>
+                                    <div class="bar-column">
+                                        <div class="bar-stack">
+                                            <div class="bar-block"></div>
+                                            <div class="bar-block"></div>
+                                        </div>
+                                        <div class="bar-label">🍄</div>
+                                        <div class="bar-count">2 votes</div>
+                                    </div>
+                                    <div class="bar-column">
+                                        <div class="bar-stack">
+                                            <div class="bar-block"></div>
+                                            <div class="bar-block"></div>
+                                            <div class="bar-block"></div>
+                                        </div>
+                                        <div class="bar-label">🫑</div>
+                                        <div class="bar-count">3 votes</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="result-reveal">
+                                <div class="result-label">THE MODE IS</div>
+                                <div class="result-value">🍖 Pepperoni</div>
+                                <div class="result-meaning">Pepperoni got the most votes (6)!</div>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'tryit',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">Your turn! Kids reported how many siblings they have:</div>
+                            </div>
+                            <div class="scenario-box explainable" data-explain="Count each number: 0 appears 2 times, 1 appears 4 times, 2 appears 3 times, 3 appears 1 time. The number 1 appears MOST (4 times), so 1 is the mode!">
+                                <div class="scenario-title">👨‍👩‍👧 Number of Siblings</div>
+                                <div class="scenario-visual" style="flex-wrap: wrap; gap: 10px;">
+                                    <span style="font-size: 1.5em; color: white; background: #667eea; padding: 10px 15px; border-radius: 10px;">0</span>
+                                    <span style="font-size: 1.5em; color: white; background: #667eea; padding: 10px 15px; border-radius: 10px;">1</span>
+                                    <span style="font-size: 1.5em; color: white; background: #667eea; padding: 10px 15px; border-radius: 10px;">2</span>
+                                    <span style="font-size: 1.5em; color: white; background: #667eea; padding: 10px 15px; border-radius: 10px;">1</span>
+                                    <span style="font-size: 1.5em; color: white; background: #667eea; padding: 10px 15px; border-radius: 10px;">3</span>
+                                    <span style="font-size: 1.5em; color: white; background: #667eea; padding: 10px 15px; border-radius: 10px;">1</span>
+                                    <span style="font-size: 1.5em; color: white; background: #667eea; padding: 10px 15px; border-radius: 10px;">2</span>
+                                    <span style="font-size: 1.5em; color: white; background: #667eea; padding: 10px 15px; border-radius: 10px;">0</span>
+                                    <span style="font-size: 1.5em; color: white; background: #667eea; padding: 10px 15px; border-radius: 10px;">1</span>
+                                    <span style="font-size: 1.5em; color: white; background: #667eea; padding: 10px 15px; border-radius: 10px;">2</span>
+                                </div>
+                                <button class="help-btn" onclick="toggleExplain(this.parentElement)">❓ I need a hint</button>
+                            </div>
+                            <div class="try-it-box">
+                                <div class="try-it-title">What's the mode (most common answer)?</div>
+                                <input type="number" class="mini-input" id="tryit-input" placeholder="?">
+                                <button class="check-btn" onclick="checkTryIt(1)">Check</button>
+                                <div id="tryit-feedback" class="feedback-inline" style="display: none;"></div>
+                            </div>
+                        `,
+                        answer: 1
+                    }
+                ]
+            },
+            range: {
+                icon: '🌡️',
+                title: 'Range',
+                steps: [
+                    {
+                        type: 'intro',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">
+                                    Let's learn about the <span class="speech-highlight">RANGE</span>!
+                                    <br><br>
+                                    The range shows <span class="speech-highlight">HOW SPREAD OUT</span> numbers are.
+                                    <br><br>
+                                    It answers: <b>"What's the difference between highest and lowest?"</b>
+                                </div>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'scenario',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">
+                                    Here are the temperatures for 5 days this week. How much did it change?
+                                </div>
+                            </div>
+                            <div class="scenario-box explainable" data-explain="Each thermometer shows the temperature that day. Taller = hotter. We want to find the DIFFERENCE between the hottest day (85°F) and coldest day (65°F).">
+                                <div class="scenario-title">🌡️ This Week's Temperatures</div>
+                                <div class="thermometer-row" id="temp-visual">
+                                    <div class="day-temp">
+                                        <div class="thermometer" style="height: 75px;"></div>
+                                        <div class="temp-label">75°F</div>
+                                        <div class="day-label">Mon</div>
+                                    </div>
+                                    <div class="day-temp">
+                                        <div class="thermometer" style="height: 85px; box-shadow: 0 0 15px #ff6b6b;"></div>
+                                        <div class="temp-label" style="color: #ff6b6b;">85°F 🔥</div>
+                                        <div class="day-label">Tue</div>
+                                    </div>
+                                    <div class="day-temp">
+                                        <div class="thermometer" style="height: 65px; box-shadow: 0 0 15px #4ecdc4;"></div>
+                                        <div class="temp-label" style="color: #4ecdc4;">65°F ❄️</div>
+                                        <div class="day-label">Wed</div>
+                                    </div>
+                                    <div class="day-temp">
+                                        <div class="thermometer" style="height: 80px;"></div>
+                                        <div class="temp-label">80°F</div>
+                                        <div class="day-label">Thu</div>
+                                    </div>
+                                    <div class="day-temp">
+                                        <div class="thermometer" style="height: 70px;"></div>
+                                        <div class="temp-label">70°F</div>
+                                        <div class="day-label">Fri</div>
+                                    </div>
+                                </div>
+                                <button class="help-btn" onclick="toggleExplain(this.parentElement)">❓ I don't understand this</button>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'step1',
+                        content: `
+                            <div class="step-box explainable" data-explain="We found the hottest day (85°F on Tuesday) and coldest day (65°F on Wednesday). The RANGE is just subtracting: 85 - 65 = 20. This tells us the temperature varied by 20 degrees!">
+                                <div class="step-header">
+                                    <div class="step-title-row">
+                                        <div class="step-num">1</div>
+                                        <div class="step-title">Find highest & lowest, then subtract</div>
+                                    </div>
+                                    <button class="help-btn" onclick="toggleExplain(this.closest('.explainable'))">❓ Help</button>
+                                </div>
+                                <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin: 20px 0; flex-wrap: wrap;">
+                                    <div style="text-align: center; padding: 15px 25px; background: rgba(255,107,107,0.2); border-radius: 15px; border: 2px solid #ff6b6b;">
+                                        <div style="font-size: 2em;">🔥</div>
+                                        <div style="color: #ff6b6b; font-size: 1.5em; font-weight: bold;">85°F</div>
+                                        <div style="color: rgba(255,255,255,0.7);">Highest</div>
+                                    </div>
+                                    <div style="font-size: 2em; color: #ffe66d;">−</div>
+                                    <div style="text-align: center; padding: 15px 25px; background: rgba(78,205,196,0.2); border-radius: 15px; border: 2px solid #4ecdc4;">
+                                        <div style="font-size: 2em;">❄️</div>
+                                        <div style="color: #4ecdc4; font-size: 1.5em; font-weight: bold;">65°F</div>
+                                        <div style="color: rgba(255,255,255,0.7);">Lowest</div>
+                                    </div>
+                                    <div style="font-size: 2em; color: #ffe66d;">=</div>
+                                    <div style="font-size: 2em; color: #ffe66d; font-weight: bold;">?</div>
+                                </div>
+                            </div>
+                            <div class="result-reveal">
+                                <div class="result-label">THE RANGE IS</div>
+                                <div class="result-value">20°F</div>
+                                <div class="result-meaning">Temperature varied by 20 degrees this week!</div>
+                            </div>
+                        `
+                    },
+                    {
+                        type: 'tryit',
+                        content: `
+                            <div class="teacher-box">
+                                <div class="teacher-avatar">🧑‍🏫</div>
+                                <div class="teacher-speech">Your turn! Here are prices of different toys:</div>
+                            </div>
+                            <div class="scenario-box explainable" data-explain="Find the most expensive ($25 teddy bear) and cheapest ($5 ball). Subtract them: $25 - $5 = $20. The range tells us the prices vary by $20!">
+                                <div class="scenario-title">🧸 Toy Store Prices</div>
+                                <div class="scenario-visual" style="gap: 25px;">
+                                    <div class="person-stack">
+                                        <div style="font-size: 2.5em;">🚗</div>
+                                        <div class="person-label" style="font-size: 1.2em;">$15</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div style="font-size: 2.5em;">🧸</div>
+                                        <div class="person-label" style="font-size: 1.2em; color: #ff6b6b;">$25 🔺</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div style="font-size: 2.5em;">⚽</div>
+                                        <div class="person-label" style="font-size: 1.2em; color: #4ecdc4;">$5 🔻</div>
+                                    </div>
+                                    <div class="person-stack">
+                                        <div style="font-size: 2.5em;">🎮</div>
+                                        <div class="person-label" style="font-size: 1.2em;">$20</div>
+                                    </div>
+                                </div>
+                                <button class="help-btn" onclick="toggleExplain(this.parentElement)">❓ I need a hint</button>
+                            </div>
+                            <div class="try-it-box">
+                                <div class="try-it-title">What's the range of toy prices?</div>
+                                <input type="number" class="mini-input" id="tryit-input" placeholder="$?">
+                                <button class="check-btn" onclick="checkTryIt(20)">Check</button>
+                                <div id="tryit-feedback" class="feedback-inline" style="display: none;"></div>
+                            </div>
+                        `,
+                        answer: 20
+                    }
+                ]
+            }
+        };
+
+        // Functions
+        function loadState() {
+            const saved = localStorage.getItem('mathStatsState');
+            if (saved) { state = { ...state, ...JSON.parse(saved) }; updateUI(); }
+        }
+
+        function saveState() {
+            localStorage.setItem('mathStatsState', JSON.stringify(state));
+        }
+
+        function updateUI() {
+            document.getElementById('total-coins').textContent = state.coins;
+            document.getElementById('total-stars').textContent = state.stars;
+            document.getElementById('streak-count').textContent = state.streak;
+            ['mean', 'median', 'mode', 'range'].forEach(t => {
+                document.getElementById(`${t}-level`).textContent = `Lv ${state.levels[t]}`;
+            });
+            document.getElementById('streak-icon').classList.toggle('streak-fire', state.streak >= 3);
+        }
+
+        function startTopic(topic) {
+            state.currentTopic = topic;
+            state.currentMode = 'learn';
+            state.lessonStep = 0;
+
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('topic-section').classList.add('active');
+            document.getElementById('topic-title').textContent = `${lessons[topic].icon} ${lessons[topic].title}`;
+            document.getElementById('tab-learn').classList.add('active');
+            document.getElementById('tab-practice').classList.remove('active');
+
+            showLearnMode();
+        }
+
+        function goHome() {
+            document.getElementById('topic-section').classList.remove('active');
+            document.getElementById('main-menu').style.display = 'grid';
+            state.currentTopic = null;
+            closeAllExplains();
+        }
+
+        function switchMode(mode) {
+            state.currentMode = mode;
+            document.getElementById('tab-learn').classList.toggle('active', mode === 'learn');
+            document.getElementById('tab-practice').classList.toggle('active', mode === 'practice');
+            closeAllExplains();
+
+            if (mode === 'learn') showLearnMode();
+            else showPracticeMode();
+        }
+
+        function showLearnMode() {
+            document.getElementById('learn-mode').classList.remove('hidden');
+            document.getElementById('practice-mode').classList.add('hidden');
+            renderLesson();
+        }
+
+        function renderLesson() {
+            const lesson = lessons[state.currentTopic];
+            const container = document.getElementById('lesson-content');
+            let html = '';
+
+            for (let i = 0; i <= state.lessonStep && i < lesson.steps.length; i++) {
+                html += lesson.steps[i].content;
+            }
+
+            if (state.lessonStep < lesson.steps.length - 1) {
+                html += `<button class="continue-btn" onclick="nextLessonStep()">Continue →</button>`;
+            } else {
+                html += `<button class="continue-btn" onclick="switchMode('practice')">Start Practice! 🚀</button>`;
+            }
+
+            container.innerHTML = html;
+            setTimeout(() => document.querySelectorAll('.result-reveal').forEach(el => el.classList.add('show')), 500);
+        }
+
+        function nextLessonStep() {
+            const lesson = lessons[state.currentTopic];
+            if (state.lessonStep < lesson.steps.length - 1) {
+                state.lessonStep++;
+                renderLesson();
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }
+        }
+
+        // Explain/Help system
+        function toggleExplain(element) {
+            closeAllExplains();
+            const explainText = element.dataset.explain;
+            if (!explainText) return;
+
+            element.classList.add('highlighted');
+
+            const popup = document.createElement('div');
+            popup.className = 'explain-popup';
+            popup.innerHTML = `
+                <button class="close-explain" onclick="closeAllExplains()">✕</button>
+                ${explainText}
+            `;
+            element.appendChild(popup);
+            state.activeExplain = element;
+        }
+
+        function closeAllExplains() {
+            document.querySelectorAll('.highlighted').forEach(el => el.classList.remove('highlighted'));
+            document.querySelectorAll('.explain-popup').forEach(el => el.remove());
+            state.activeExplain = null;
+        }
+
+        function checkTryIt(answer) {
+            const input = document.getElementById('tryit-input');
+            const feedback = document.getElementById('tryit-feedback');
+            const userAnswer = parseFloat(input.value);
+
+            feedback.style.display = 'block';
+            if (userAnswer === answer) {
+                feedback.className = 'feedback-inline correct';
+                feedback.textContent = '✓ Correct! You got it!';
+                state.coins += 10;
+                saveState();
+                updateUI();
+                spawnConfetti();
+            } else {
+                feedback.className = 'feedback-inline incorrect';
+                feedback.textContent = `✗ Not quite. The answer is ${answer}. Click the hint button above!`;
+            }
+        }
+
+        // Practice Mode
+        function showPracticeMode() {
+            document.getElementById('learn-mode').classList.add('hidden');
+            document.getElementById('practice-mode').classList.remove('hidden');
+            state.currentProblem = 0;
+            renderProgressDots();
+            generateProblem();
+        }
+
+        function renderProgressDots() {
+            const container = document.getElementById('practice-dots');
+            container.innerHTML = '';
+            for (let i = 0; i < PROBLEMS_PER_ROUND; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (i < state.currentProblem) dot.classList.add('completed');
+                if (i === state.currentProblem) dot.classList.add('current');
+                container.appendChild(dot);
+            }
+        }
+
+        function randomNumbers(count, min, max) {
+            let nums = [];
+            for (let i = 0; i < count; i++) nums.push(Math.floor(Math.random() * (max - min + 1)) + min);
+            return nums;
+        }
+
+        function generateProblem() {
+            const topic = state.currentTopic;
+            const level = state.levels[topic];
+            let count = 4 + Math.min(level, 3);
+            let maxNum = 10 + (level * 5);
+            let nums;
+
+            switch(topic) {
+                case 'mean':
+                    nums = randomNumbers(count, 1, maxNum);
+                    let sum = nums.reduce((a,b) => a + b, 0);
+                    let remainder = sum % count;
+                    if (remainder !== 0) nums[0] += (count - remainder);
+                    state.currentAnswer = nums.reduce((a,b) => a + b, 0) / nums.length;
+                    break;
+                case 'median':
+                    nums = randomNumbers(count % 2 === 0 ? count + 1 : count, 1, maxNum);
+                    const sorted = [...nums].sort((a, b) => a - b);
+                    state.currentAnswer = sorted[Math.floor(sorted.length / 2)];
+                    break;
+                case 'mode':
+                    nums = randomNumbers(count - 2, 1, Math.min(maxNum, 12));
+                    const modeNum = nums[Math.floor(Math.random() * nums.length)];
+                    nums.push(modeNum, modeNum);
+                    nums = nums.sort(() => Math.random() - 0.5);
+                    state.currentAnswer = modeNum;
+                    break;
+                case 'range':
+                    nums = randomNumbers(count, 1, maxNum);
+                    state.currentAnswer = Math.max(...nums) - Math.min(...nums);
+                    break;
+            }
+
+            state.currentNumbers = nums;
+            renderPractice(topic, nums);
+        }
+
+        function renderPractice(topic, nums) {
+            const container = document.getElementById('practice-content');
+            let html = '';
+
+            switch(topic) {
+                case 'mean':
+                    const sum = nums.reduce((a,b) => a + b, 0);
+                    html = `
+                        <div class="practice-instruction">Add all numbers, then divide by how many!</div>
+                        <div class="step-row"><div class="step-number">1</div><div class="step-content-practice"><div class="step-label">THE NUMBERS</div><div class="numbers-row">${nums.map(n => `<div class="num-bubble">${n}</div>`).join('')}</div></div></div>
+                        <div class="step-row"><div class="step-number">2</div><div class="step-content-practice"><div class="step-label">ADD THEM</div><div class="step-value">${nums.join(' + ')} = ${sum}</div></div></div>
+                        <div class="step-row"><div class="step-number">3</div><div class="step-content-practice"><div class="step-label">DIVIDE BY ${nums.length}</div><div class="step-value">${sum} ÷ ${nums.length} = ?</div></div></div>
+                    `;
+                    break;
+                case 'median':
+                    const sorted = [...nums].sort((a,b) => a - b);
+                    const midIdx = Math.floor(sorted.length / 2);
+                    html = `
+                        <div class="practice-instruction">Sort the numbers, then find the middle!</div>
+                        <div class="step-row"><div class="step-number">1</div><div class="step-content-practice"><div class="step-label">UNSORTED</div><div class="numbers-row">${nums.map(n => `<div class="num-bubble">${n}</div>`).join('')}</div></div></div>
+                        <div class="step-row"><div class="step-number">2</div><div class="step-content-practice"><div class="step-label">SORTED</div><div class="numbers-row">${sorted.map((n,i) => `<div class="num-bubble ${i === midIdx ? 'highlight' : 'sorted'}">${n}</div>`).join('')}</div></div></div>
+                        <div class="legend"><div class="legend-item"><div class="legend-dot yellow"></div><span>Middle = ?</span></div></div>
+                    `;
+                    break;
+                case 'mode':
+                    const counts = {};
+                    nums.forEach(n => counts[n] = (counts[n] || 0) + 1);
+                    const maxCount = Math.max(...Object.values(counts));
+                    const uniqueNums = [...new Set(nums)].sort((a,b) => a - b);
+                    html = `
+                        <div class="practice-instruction">Count each number — which appears most?</div>
+                        <div class="step-row"><div class="step-number">1</div><div class="step-content-practice"><div class="step-label">THE NUMBERS</div><div class="numbers-row">${nums.map(n => `<div class="num-bubble small">${n}</div>`).join('')}</div></div></div>
+                        <div class="step-row"><div class="step-number">2</div><div class="step-content-practice"><div class="step-label">COUNT EACH</div><div class="bar-chart">${uniqueNums.map(n => `<div class="bar-column"><div class="bar-stack">${Array(counts[n]).fill().map(() => `<div class="bar-block ${counts[n] === maxCount ? 'winner' : ''}"></div>`).join('')}</div><div class="bar-label">${n}</div><div class="bar-count">×${counts[n]}</div></div>`).join('')}</div></div></div>
+                        <div class="legend"><div class="legend-item"><div class="legend-dot red"></div><span>Tallest = ?</span></div></div>
+                    `;
+                    break;
+                case 'range':
+                    const min = Math.min(...nums);
+                    const max = Math.max(...nums);
+                    html = `
+                        <div class="practice-instruction">Find biggest & smallest, then subtract!</div>
+                        <div class="step-row"><div class="step-number">1</div><div class="step-content-practice"><div class="step-label">THE NUMBERS</div><div class="numbers-row">${nums.map(n => `<div class="num-bubble ${n === max ? 'highlight' : ''}" style="${n === min ? 'background:#ff6b6b;' : ''}">${n}</div>`).join('')}</div></div></div>
+                        <div class="legend"><div class="legend-item"><div class="legend-dot yellow"></div><span>Biggest: ${max}</span></div><div class="legend-item"><div class="legend-dot red"></div><span>Smallest: ${min}</span></div></div>
+                        <div class="step-row"><div class="step-number">2</div><div class="step-content-practice"><div class="step-label">SUBTRACT</div><div class="step-value">${max} − ${min} = ?</div></div></div>
+                    `;
+                    break;
+            }
+
+            html += `<div class="answer-section"><div class="answer-prompt">What's the ${topic}?</div><input type="number" class="answer-input" id="practice-answer" placeholder="?"><button class="submit-btn" onclick="checkPracticeAnswer()">GO!</button></div>`;
+            container.innerHTML = html;
+            document.getElementById('practice-answer').focus();
+        }
+
+        function checkPracticeAnswer() {
+            const input = document.getElementById('practice-answer');
+            const userAnswer = parseFloat(input.value);
+            if (isNaN(userAnswer)) { input.style.borderColor = '#ff6b6b'; setTimeout(() => input.style.borderColor = 'rgba(255,255,255,0.3)', 500); return; }
+            if (Math.abs(userAnswer - state.currentAnswer) < 0.01) correctAnswer();
+            else wrongAnswer(input);
+        }
+
+        function correctAnswer() {
+            const topic = state.currentTopic;
+            state.streak++;
+            state.coins += 10 * Math.min(state.streak, 5);
+            state.xp[topic] += 20 + (state.streak * 5);
+            state.currentProblem++;
+
+            showFeedback('✓', '#4ecdc4');
+            spawnConfetti();
+            showFloatingXP(20 + (state.streak * 5));
+            if (state.streak >= 2) showCombo(state.streak);
+
+            if (state.xp[topic] >= XP_PER_LEVEL * state.levels[topic]) {
+                state.levels[topic]++;
+                state.stars++;
+                setTimeout(() => showLevelUp(topic), 600);
+            }
+
+            updateUI();
+            saveState();
+
+            setTimeout(() => {
+                if (state.currentProblem >= PROBLEMS_PER_ROUND) completeRound(topic);
+                else { renderProgressDots(); generateProblem(); }
+            }, 800);
+        }
+
+        function wrongAnswer(input) {
+            state.streak = 0;
+            showFeedback('✗', '#ff6b6b');
+            hideCombo();
+            input.style.borderColor = '#ff6b6b';
+            input.style.animation = 'shake 0.5s ease';
+            setTimeout(() => { input.style.borderColor = 'rgba(255,255,255,0.3)'; input.style.animation = ''; input.value = ''; input.focus(); }, 500);
+            updateUI();
+            saveState();
+        }
+
+        function showFeedback(text, color) {
+            const fb = document.createElement('div');
+            fb.className = 'feedback';
+            fb.textContent = text;
+            fb.style.color = color;
+            fb.style.textShadow = `0 0 30px ${color}`;
+            document.body.appendChild(fb);
+            setTimeout(() => fb.remove(), 800);
+        }
+
+        function showFloatingXP(amount) {
+            const xp = document.createElement('div');
+            xp.className = 'floating-xp';
+            xp.textContent = `+${amount} XP`;
+            xp.style.left = '50%';
+            xp.style.top = '40%';
+            document.body.appendChild(xp);
+            setTimeout(() => xp.remove(), 1000);
+        }
+
+        function showCombo(streak) {
+            const combo = document.getElementById('combo-display');
+            document.getElementById('combo-text').textContent = `${streak}x COMBO!`;
+            combo.classList.add('active');
+        }
+
+        function hideCombo() { document.getElementById('combo-display').classList.remove('active'); }
+
+        function spawnConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a29bfe', '#fd79a8'];
+            for (let i = 0; i < 30; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                c.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 4000);
+            }
+        }
+
+        function showLevelUp(topic) {
+            const modal = document.getElementById('level-modal');
+            document.getElementById('modal-icon').textContent = '🎉';
+            document.getElementById('modal-title').textContent = 'LEVEL UP!';
+            document.getElementById('modal-message').textContent = `${topic.charAt(0).toUpperCase() + topic.slice(1)} is now Level ${state.levels[topic]}!`;
+            modal.classList.add('active');
+            spawnConfetti();
+        }
+
+        function closeModal() { document.getElementById('level-modal').classList.remove('active'); }
+
+        function completeRound(topic) {
+            state.coins += 50;
+            state.stars++;
+            const modal = document.getElementById('level-modal');
+            document.getElementById('modal-icon').textContent = '🌟';
+            document.getElementById('modal-title').textContent = 'ROUND COMPLETE!';
+            document.getElementById('modal-message').textContent = `+50 coins earned!`;
+            modal.classList.add('active');
+            saveState();
+            updateUI();
+            spawnConfetti();
+        }
+
+        document.addEventListener('keypress', e => { if (e.key === 'Enter' && state.currentMode === 'practice' && state.currentTopic) checkPracticeAnswer(); });
+        document.addEventListener('click', e => { if (state.activeExplain && !e.target.closest('.explainable') && !e.target.closest('.help-btn')) closeAllExplains(); });
+
+        loadState();
+        updateUI();
+    </script>
+</body>
+</html>
