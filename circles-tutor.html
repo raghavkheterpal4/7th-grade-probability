@@ -981,6 +981,45 @@
                 <button class="btn btn-primary" onclick="hideAltExplanation('parts')" style="margin-top: 15px;">Got it! Continue</button>
             </div>
 
+            <!-- Quick Check for Parts -->
+            <div class="practice-problem" id="parts-quick-check" style="display: none;">
+                <h3>Quick Check!</h3>
+                <p>A circle has a radius of <strong>7 cm</strong>. What is the diameter?</p>
+                <div class="choices" id="parts-check-choices">
+                    <div class="choice" onclick="selectChoice(this, 'parts-check', '3.5')">3.5 cm</div>
+                    <div class="choice" onclick="selectChoice(this, 'parts-check', '14')">14 cm</div>
+                    <div class="choice" onclick="selectChoice(this, 'parts-check', '7')">7 cm</div>
+                    <div class="choice" onclick="selectChoice(this, 'parts-check', '21')">21 cm</div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="checkQuickAnswer('parts-check', '14', 'Remember: diameter = 2 × radius. So d = 2 × 7 = 14 cm!')">Check Answer</button>
+                </div>
+                <div class="feedback" id="parts-check-feedback"></div>
+            </div>
+
+            <!-- FAQ for Parts -->
+            <div class="faq-section" id="parts-faq" style="display: none;">
+                <h3>Quick Questions About Circle Parts</h3>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Which is longer - the radius or the diameter?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The diameter is always longer! It's exactly twice the length of the radius because it goes all the way across the circle, while the radius only goes halfway (from center to edge).</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Can a circle have more than one radius?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! You can draw a radius from the center to ANY point on the edge. A circle has infinitely many radii - but they're all the same length! That's what makes a circle special.</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="btn-group" id="parts-continue" style="display: none;">
                 <button class="btn btn-primary" onclick="nextSection()">Continue to Pi</button>
             </div>
@@ -1063,6 +1102,45 @@
 
                 <p>This works for every circle ever! Big or small, the string is always about <strong>3.14 times</strong> the diameter.</p>
                 <button class="btn btn-primary" onclick="hideAltExplanation('pi')" style="margin-top: 15px;">Got it! Continue</button>
+            </div>
+
+            <!-- Quick Check for Pi -->
+            <div class="practice-problem" id="pi-quick-check" style="display: none;">
+                <h3>Quick Check!</h3>
+                <p>If a circle has a circumference of 31.4 cm and a diameter of 10 cm, what is C ÷ d?</p>
+                <div class="choices" id="pi-check-choices">
+                    <div class="choice" onclick="selectChoice(this, 'pi-check', '3.14')">3.14</div>
+                    <div class="choice" onclick="selectChoice(this, 'pi-check', '21.4')">21.4</div>
+                    <div class="choice" onclick="selectChoice(this, 'pi-check', '41.4')">41.4</div>
+                    <div class="choice" onclick="selectChoice(this, 'pi-check', '314')">314</div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="checkQuickAnswer('pi-check', '3.14', 'Exactly! 31.4 ÷ 10 = 3.14, which is π! This works for every circle.')">Check Answer</button>
+                </div>
+                <div class="feedback" id="pi-check-feedback"></div>
+            </div>
+
+            <!-- FAQ for Pi -->
+            <div class="faq-section" id="pi-faq" style="display: none;">
+                <h3>Quick Questions About Pi</h3>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Does π ever end?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No! π goes on forever without repeating: 3.14159265358979... Mathematicians have calculated trillions of digits, but it never ends! For our work, 3.14 is close enough.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Why is π always the same for every circle?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Because all circles are the same shape - just different sizes! When you scale a circle up or down, both the circumference AND diameter change by the same amount, so their ratio stays constant at 3.14.</p>
+                    </div>
+                </div>
             </div>
 
             <div class="btn-group" id="pi-continue" style="display: none;">
@@ -1232,6 +1310,45 @@
                 <button class="btn btn-primary" onclick="hideAltExplanation('formulas')" style="margin-top: 15px;">Got it! Continue</button>
             </div>
 
+            <!-- Quick Check for Formulas -->
+            <div class="practice-problem" id="formulas-quick-check" style="display: none;">
+                <h3>Quick Check!</h3>
+                <p>Which formula should you use if you know the <strong>radius</strong> of a circle?</p>
+                <div class="choices" id="formulas-check-choices">
+                    <div class="choice" onclick="selectChoice(this, 'formulas-check', 'C = πd')">C = πd</div>
+                    <div class="choice" onclick="selectChoice(this, 'formulas-check', 'C = 2πr')">C = 2πr</div>
+                    <div class="choice" onclick="selectChoice(this, 'formulas-check', 'd = 2r')">d = 2r</div>
+                    <div class="choice" onclick="selectChoice(this, 'formulas-check', 'C = r + d')">C = r + d</div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="checkQuickAnswer('formulas-check', 'C = 2πr', 'Correct! When you have the radius, use C = 2πr. When you have the diameter, use C = πd.')">Check Answer</button>
+                </div>
+                <div class="feedback" id="formulas-check-feedback"></div>
+            </div>
+
+            <!-- FAQ for Formulas -->
+            <div class="faq-section" id="formulas-faq" style="display: none;">
+                <h3>Quick Questions About the Formulas</h3>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>What does the "2" mean in C = 2πr?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The "2" is there because diameter = 2 × radius. Since C = πd and d = 2r, when we substitute, we get C = π(2r) = 2πr. The 2 converts the radius to diameter!</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Can I always use the same formula?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! You can pick your favorite and stick with it. If you're given radius but prefer C = πd, just double the radius first to get the diameter. If you're given diameter but prefer C = 2πr, just halve the diameter to get the radius!</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="btn-group" id="formulas-continue" style="display: none;">
                 <button class="btn btn-primary" onclick="nextSection()">See an Example</button>
             </div>
@@ -1321,6 +1438,28 @@
                     <text x="175" y="230" text-anchor="middle" font-size="20" fill="var(--circumference-color)" font-weight="bold">Circumference = 31.4 meters</text>
                 </svg>
                 <p style="margin-top: 10px;">The distance around the pool is <strong>31.4 meters</strong>!</p>
+            </div>
+
+            <div class="faq-section">
+                <h3>Quick Questions About This Example</h3>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Why did we use C = πd instead of C = 2πr?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Because the problem gave us the diameter (10 meters), not the radius! Always use the formula that matches the information you have. It saves a step!</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>What if someone walks around this pool?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>They would walk 31.4 meters! That's the circumference - the total distance around the circle. It's like measuring the edge of the pool with a tape measure.</p>
+                    </div>
+                </div>
             </div>
 
             <div class="btn-group">
@@ -1478,6 +1617,28 @@
                     <text x="175" y="230" text-anchor="middle" font-size="20" fill="var(--circumference-color)" font-weight="bold">Circumference = 31.4 feet</text>
                 </svg>
                 <p style="margin-top: 10px;">The distance around the garden is <strong>31.4 feet</strong>!</p>
+            </div>
+
+            <div class="faq-section">
+                <h3>Quick Questions About This Example</h3>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Why multiply by 2 first?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>In C = 2πr, you can calculate in any order! Some people do 2 × 5 = 10 first, then 10 × 3.14 = 31.4. Others do 2 × 3.14 = 6.28 first, then 6.28 × 5 = 31.4. Same answer either way!</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Could I have used C = πd instead?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! If radius = 5, then diameter = 10. So C = π × 10 = 3.14 × 10 = 31.4. Same answer! You can always convert between radius and diameter to use your preferred formula.</p>
+                    </div>
+                </div>
             </div>
 
             <div class="btn-group">
@@ -1718,6 +1879,37 @@
 
             <div class="visual-container" style="background: #F0FFF4;">
                 <p style="font-size: 20px;">The bicycle travels <strong style="color: var(--circumference-color);">75.36 inches</strong> (about 6.28 feet) in one wheel rotation!</p>
+            </div>
+
+            <div class="faq-section">
+                <h3>Quick Questions About Wheels and Rotation</h3>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Why does one rotation equal the circumference?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Imagine the wheel "unrolling" like a roll of tape. When it completes one full turn, the entire outer edge has touched the ground once. That edge IS the circumference - so you travel exactly that distance!</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>What if the wheel rotates twice?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Then you travel twice the circumference! For this bike wheel: 2 × 75.36 = 150.72 inches. For any number of rotations, just multiply: distance = circumference × number of rotations.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <span>Do bigger wheels travel farther per rotation?</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! Bigger wheels have larger circumferences, so they cover more ground in one spin. That's why adult bikes with larger wheels can go faster with the same pedaling speed as kids' bikes!</p>
+                    </div>
+                </div>
             </div>
 
             <div class="btn-group">
@@ -2168,21 +2360,87 @@
         function showAltExplanation(section, show) {
             const altExp = document.getElementById('alt-' + section);
             const continueBtn = document.getElementById(section + '-continue');
+            const quickCheck = document.getElementById(section + '-quick-check');
+            const faq = document.getElementById(section + '-faq');
 
             if (show) {
                 altExp.classList.add('show');
                 continueBtn.style.display = 'none';
+                if (quickCheck) quickCheck.style.display = 'none';
+                if (faq) faq.style.display = 'none';
             } else {
                 altExp.classList.remove('show');
-                continueBtn.style.display = 'flex';
+                // Show quick check first, then FAQ, then continue button after quick check is answered
+                if (quickCheck) {
+                    quickCheck.style.display = 'block';
+                    if (faq) faq.style.display = 'block';
+                    continueBtn.style.display = 'none';
+                } else {
+                    if (faq) faq.style.display = 'block';
+                    continueBtn.style.display = 'flex';
+                }
             }
         }
 
         function hideAltExplanation(section) {
             const altExp = document.getElementById('alt-' + section);
             const continueBtn = document.getElementById(section + '-continue');
+            const quickCheck = document.getElementById(section + '-quick-check');
+            const faq = document.getElementById(section + '-faq');
+
             altExp.classList.remove('show');
-            continueBtn.style.display = 'flex';
+            // Show quick check first
+            if (quickCheck) {
+                quickCheck.style.display = 'block';
+                if (faq) faq.style.display = 'block';
+                continueBtn.style.display = 'none';
+            } else {
+                if (faq) faq.style.display = 'block';
+                continueBtn.style.display = 'flex';
+            }
+        }
+
+        // Check quick check answers
+        function checkQuickAnswer(checkId, correctAnswer, explanation) {
+            if (!selectedAnswers[checkId]) {
+                alert('Please select an answer first!');
+                return;
+            }
+
+            const feedback = document.getElementById(checkId + '-feedback');
+            const choices = document.querySelectorAll('#' + checkId + '-choices .choice');
+            const section = checkId.replace('-check', '');
+            const continueBtn = document.getElementById(section + '-continue');
+
+            const isCorrect = selectedAnswers[checkId] === correctAnswer;
+
+            // Mark choices
+            choices.forEach(c => {
+                if (c.textContent.includes(correctAnswer) || c.textContent === correctAnswer) {
+                    c.classList.add('correct');
+                } else if (c.classList.contains('selected') && !isCorrect) {
+                    c.classList.add('incorrect');
+                }
+            });
+
+            if (isCorrect) {
+                feedback.className = 'feedback show correct';
+                feedback.innerHTML = '<h4>Correct!</h4><p>' + explanation + '</p>';
+                continueBtn.style.display = 'flex';
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.innerHTML = '<h4>Not quite!</h4><p>' + explanation + '</p><button class="btn btn-secondary" onclick="resetQuickCheck(\'' + checkId + '\')" style="margin-top: 10px;">Try Again</button>';
+            }
+        }
+
+        function resetQuickCheck(checkId) {
+            const choices = document.querySelectorAll('#' + checkId + '-choices .choice');
+            choices.forEach(c => {
+                c.classList.remove('selected', 'correct', 'incorrect');
+            });
+            const feedback = document.getElementById(checkId + '-feedback');
+            feedback.classList.remove('show');
+            selectedAnswers[checkId] = null;
         }
 
         // Multiple choice selection
